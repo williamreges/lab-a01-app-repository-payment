@@ -6,11 +6,11 @@ Projeto de estudo da funcionalidade com Spring JPA e Flyway
 
 ## 🚀 Começando
 
-Esse projeto é um exemplo de uma API com um CRUD e utiliza [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
-como ferramenta para fazer operações em um banco de dados MySql. E como recurso temos o 
-[Flyway](https://www.red-gate.com/products/flyway/community/) como ferramenta para versionamento de tabelas de banco de 
-dados mysql. E para complementar essa API trabalha com Spring Cloud e está se regisrando em um **Service Registration and Discovery** como 
-o Eureka.
+Esse projeto é um exemplo de laboratório que simula operações de pagamentos via PIX. É uma API com um CRUD e utiliza 
+[Spring Data JPA](https://spring.io/projects/spring-data-jpa)como ferramenta para fazer operações em um banco de dados 
+MySql. E como recurso temos o [Flyway](https://www.red-gate.com/products/flyway/community/) como ferramenta para 
+versionamento de tabelas de banco de dados mysql. E para complementar essa API trabalha com Spring Cloud e está se 
+regisrando em um **Service Registration and Discovery** como o Eureka.
 
 
 
@@ -25,12 +25,12 @@ Instale alugmas ferramentas como
 
 ### 🔧 Instalação
 
-Instale o Java 17. Utilizei o [STKMAN](https://sdkman.io/) como ferramenta no linux:
+Instale o Java 17. Utilizei o [SDKMAN](https://sdkman.io/) como ferramenta no linux:
 ```bash
   sudo sdk install java 17.0.13-zulu
 ```
 
-Instale o Maven. Utilizei o [STKMAN](https://sdkman.io/) como ferramenta no linux:
+Instale o Maven. Utilizei o [SDKMAN](https://sdkman.io/) como ferramenta no linux:
 ```bash
   sudo sdk install maven 3.8.5
 ```
@@ -80,7 +80,7 @@ Start o serviço e entre na porta http://localhost:8000/
   mvn spring-boot:run
 ```
 
-Para testar uma requisição de persisetncia execute o curl abaixo e a resposta será um UUID.
+Para testar uma requisição de operação de pagamento via PIX execute o curl abaixo e a resposta será um UUID.
 ```bash
   curl --request POST \
   --url http://localhost:8000/transacao-pix \
@@ -114,12 +114,12 @@ E com isso logo será retornado algo parecido com esse body abaixo:
 }
 ```
 
-Entre no link
-http://localhost:8761/
-
-Será mostrado o serviço rodando via browser conforme exemplo abaixo:
 
 
 ## 🔗 Referencias
 * [Spring Cloud](https://spring.io/cloud)
+* [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
 * [Service Registration and Discovery](https://spring.io/guides/gs/service-registration-and-discovery)
+* [Docker Mysql](https://hub.docker.com/_/mysql)
+* [Flyway](https://www.red-gate.com/products/flyway/community/)
+* [SDKMAN](https://sdkman.io/) 
