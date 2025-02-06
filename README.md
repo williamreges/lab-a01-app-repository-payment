@@ -1,16 +1,17 @@
 # lab-a01-app-repository-payment
 
-Projeto de estudo da funcionalidade com Spring JPA e Flyway
+Projeto de estudo da simula pagamentos com Spring Cloud
 
 ---
 
 ## 🚀 Começando
 
 Esse projeto é um exemplo de laboratório que simula operações de pagamentos via PIX. É uma API com um CRUD e utiliza 
-[Spring Data JPA](https://spring.io/projects/spring-data-jpa)como ferramenta para fazer operações em um banco de dados 
+[Spring Data JPA](https://spring.io/projects/spring-data-jpa) como ferramenta para fazer operações em um banco de dados 
 MySql. E como recurso temos o [Flyway](https://www.red-gate.com/products/flyway/community/) como ferramenta para 
 versionamento de tabelas de banco de dados mysql. E para complementar essa API trabalha com Spring Cloud e está se 
-regisrando em um **Service Registration and Discovery** como o Eureka.
+regisrando em um [Service Registration and Discovery](https://spring.io/guides/gs/service-registration-and-discovery)
+como o Eureka.
 
 
 
