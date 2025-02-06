@@ -9,7 +9,7 @@ eureka:
 
 spring:
   application:
-    name: lab-a01-app-repository-payment
+    name: app-repository-payment
   cloud:
     config:
       enabled: false
