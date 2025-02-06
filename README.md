@@ -75,11 +75,11 @@ Execute o docker-compose para subir um contaneiner de banco de dados [mysql](htt
   sudo docker-compose up -d
 ```
 
-Start o serviço e entre na porta http://localhost:8000/
-
+Start o serviço
 ```bash
   mvn spring-boot:run
 ```
+Entre na porta http://localhost:8000/actuator/health e se retornar `status: "UP"` é porque está rodando com sucesso.
 
 Para testar uma requisição de operação de pagamento via PIX execute o curl abaixo e a resposta será um UUID.
 ```bash
