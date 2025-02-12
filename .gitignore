@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/script-generator-terraform-ssm/
+/script-generator-terraform-ssm/
