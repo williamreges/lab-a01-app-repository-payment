@@ -1,4 +1,4 @@
-VERSION=V2
+VERSION=V3
 NAME_IMAGE=lab-a01-app-repository-payment
 NAME_REPO=williamreges
 
