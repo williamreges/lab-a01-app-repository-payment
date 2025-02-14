@@ -11,7 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>lab-a01-app-repository-payment</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>app-repository-payment</name>
+    <name>lab-a01-app-repository-payment</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
