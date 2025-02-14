@@ -15,6 +15,11 @@ management:
     tracing:
       endpoint: http://localhost:9411/api/v2/spans
 
+logging:
+  pattern:
+    correlation: "[${spring.application.name:},%X{traceId:-},%X{spanId:-},%X{correlationID:-}] "
+  include-application-name: false
+
 spring:
   application:
     name: app-repository-payment
