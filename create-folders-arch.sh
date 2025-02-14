@@ -38,6 +38,8 @@ src/main/java/com/example/payment/entrypoint/model/response
 echo "=== InfraEstructure ==="
 mkdir -p \
 src/main/java/com/example/payment/infraestructure \
+src/main/java/com/example/payment/infraestructure/filters \
+src/main/java/com/example/payment/infraestructure/interceptor \
 src/main/java/com/example/payment/infraestructure/exception \
 src/main/java/com/example/payment/infraestructure/exception/handler \
 src/main/java/com/example/payment/infraestructure/configuration

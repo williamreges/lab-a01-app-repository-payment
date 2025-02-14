@@ -1,4 +1,4 @@
-NAME_IMAGE=lab-a01-app-repository-payment
+NAME_IMAGE=$(cat ./pom.xml | grep "<name>[a-zA-Z0-9]*" | sed "s/<name>//g" | sed "s/<\/name>//g" |  sed -e 's/^[ \t]*//')
 NAME_REPO=williamreges
 
 echo "Docker RUN Local Network HOST"
