@@ -8,6 +8,17 @@ eureka:
       defaultZone: http://localhost:8761/eureka
 
 management:
+  endpoints:
+    web:
+     exposure:
+       include: health, prometheus
+     base-path: "/"
+     path-mapping:
+       prometheus: "metrics"
+  metrics:
+    tags:
+      application:  service-app-repository-payment
+
   tracing:
     sampling:
       probability: 1.0
