@@ -28,7 +28,7 @@ public class TransacaoPixEntity implements Serializable {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dataTrancacao;
 
-    @Column(name = "codigo_beneficiario")
+    @Column(name = "codigo_beneficiario", nullable = false)
     private String codigoBeneficiario;
 
     @Column(name = "mensagem_transacao")

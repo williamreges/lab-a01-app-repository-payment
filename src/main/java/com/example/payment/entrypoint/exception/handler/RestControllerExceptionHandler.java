@@ -1,7 +1,7 @@
-package com.example.payment.infraestructure.exception.handler;
+package com.example.payment.entrypoint.exception.handler;
 
-import com.example.payment.infraestructure.exception.model.MessageItem;
-import com.example.payment.infraestructure.exception.model.ResponseExceptionCustom;
+import com.example.payment.entrypoint.exception.model.MessageItem;
+import com.example.payment.entrypoint.exception.model.ResponseExceptionCustom;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -22,8 +22,7 @@ import static java.util.Optional.ofNullable;
 
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
-
+public class RestControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -57,11 +56,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
         final var message = String.format("Ocorreu um erro ao converter o valor '%s' do campo '%s' para o tipo '%s'. Esperado: %s",
-                        ex.getValue(),
-                        ex.getPropertyName(),
-                        ofNullable(ex.getValue()).map(Object::getClass).map(Class::getName).orElse("Unknown class"),
-                        ofNullable(ex.getRequiredType()).map(Class::getName).orElse("Unknown type")
-                );
+                ex.getValue(),
+                ex.getPropertyName(),
+                ofNullable(ex.getValue()).map(Object::getClass).map(Class::getName).orElse("Unknown class"),
+                ofNullable(ex.getRequiredType()).map(Class::getName).orElse("Unknown type")
+        );
 
         return ResponseEntity
                 .status(status) // Bad Request
@@ -101,4 +100,5 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                         )
                 )));
     }
+
 }

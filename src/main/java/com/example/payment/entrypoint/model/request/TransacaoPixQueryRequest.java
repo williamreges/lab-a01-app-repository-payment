@@ -15,6 +15,8 @@ public record TransacaoPixQueryRequest(
 
         Date dataTrancacao,
 
-        String codigoBeneficiario
+        String codigoBeneficiario,
+
+        String mensagemTransacao
 ) {
 }
