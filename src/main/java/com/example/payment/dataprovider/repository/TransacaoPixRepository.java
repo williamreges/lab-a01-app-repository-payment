@@ -5,10 +5,10 @@ import com.example.payment.application.usecases.mapper.TransacaoPixResponseMappe
 import com.example.payment.dataprovider.repository.entity.TransacaoPixEntity;
 import com.example.payment.dataprovider.repository.spec.TransacaoPixEntitySpecification;
 import com.example.payment.dataprovider.repository.validation.impl.PaymentJPAValidation;
-import com.example.payment.entrypoint.model.request.TransacaoPixQueryRequest;
-import com.example.payment.entrypoint.model.request.TransacaoPixRequest;
-import com.example.payment.entrypoint.model.request.TransacaoPixUpdateRequest;
-import com.example.payment.entrypoint.model.response.TransacaoPixResponse;
+import com.example.payment.application.domain.entity.TransacaoPixQueryRequest;
+import com.example.payment.application.domain.entity.TransacaoPixRequest;
+import com.example.payment.application.domain.entity.TransacaoPixUpdateRequest;
+import com.example.payment.application.domain.entity.TransacaoPixResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataAccessException;

@@ -1,14 +1,12 @@
-package com.example.payment.entrypoint.model.request;
+package com.example.payment.application.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TransacaoPixRequest implements Serializable {
-    private static final long serialVersionUID = 1L;
+public sealed class TransacaoPixRequest permits TransacaoPixUpdateRequest {
 
     @JsonProperty("codigoPessoa")
     @NotNull(message = "codigoPessoa can not null")

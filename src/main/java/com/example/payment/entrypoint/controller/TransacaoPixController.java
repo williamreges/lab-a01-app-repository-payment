@@ -1,10 +1,10 @@
 package com.example.payment.entrypoint.controller;
 
 import com.example.payment.dataprovider.repository.TransacaoPixRepository;
-import com.example.payment.entrypoint.model.request.TransacaoPixQueryRequest;
-import com.example.payment.entrypoint.model.request.TransacaoPixRequest;
-import com.example.payment.entrypoint.model.request.TransacaoPixUpdateRequest;
-import com.example.payment.entrypoint.model.response.TransacaoPixResponse;
+import com.example.payment.application.domain.entity.TransacaoPixQueryRequest;
+import com.example.payment.application.domain.entity.TransacaoPixRequest;
+import com.example.payment.application.domain.entity.TransacaoPixUpdateRequest;
+import com.example.payment.application.domain.entity.TransacaoPixResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.apache.logging.log4j.LogManager;

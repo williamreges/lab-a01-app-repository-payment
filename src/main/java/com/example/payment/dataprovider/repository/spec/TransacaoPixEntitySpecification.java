@@ -1,7 +1,7 @@
 package com.example.payment.dataprovider.repository.spec;
 
 import com.example.payment.dataprovider.repository.entity.TransacaoPixEntity;
-import com.example.payment.entrypoint.model.request.TransacaoPixQueryRequest;
+import com.example.payment.application.domain.entity.TransacaoPixQueryRequest;
 import org.springframework.data.jpa.domain.Specification;
 
 public final class TransacaoPixEntitySpecification {

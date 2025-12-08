@@ -1,4 +1,4 @@
-package com.example.payment.entrypoint.model.response;
+package com.example.payment.application.domain.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package com.example.payment.entrypoint.model.request;
+package com.example.payment.application.domain.entity;
 
 
 import java.math.BigDecimal;
