@@ -4,6 +4,9 @@ Projeto de estudo da simula pagamentos com Spring Cloud
 
 ---
 
+
+---
+
 ## 🚀 Começando
 
 Esse projeto é um exemplo de laboratório que simula operações de pagamentos via PIX. É uma API com um CRUD e utiliza 
@@ -55,6 +58,114 @@ Porém, se quiser rodar outro projeto complementar a esse projeto clone o seguin
 ```
 ---
 
+## 🏗️ Arquitetura Hexagonal (Ports & Adapters)
+
+Este projeto segue os princípios da **Arquitetura Hexagonal**, garantindo separação clara de responsabilidades e isolamento da lógica de negócio.
+
+### 📁 Estrutura de Pastas
+
+```
+com/example/payment/
+├── domain/                          ← Núcleo puro (sem frameworks)
+│   ├── entity/
+│   │   ├── TransacaoPixRequest
+│   │   ├── TransacaoPixUpdateRequest
+│   │   ├── TransacaoPixResponse
+│   │   └── TransacaoPixQueryRequest
+│   ├── exception/
+│   │   ├── BusinessException
+│   │   ├── DuplicateEntityBusinessException
+│   │   ├── EntityNotFoundBusinessException
+│   │   └── OperationNotAllowedBusinessException
+│   ├── port/
+│   │   └── TransacaoPersistencePort (interface)
+│   └── valueobject/
+│
+├── adapter/                         ← Adapters (entrada e saída)
+│   ├── input/rest/
+│   │   ├── controller/
+│   │   │   └── TransacaoPixController (Driving Adapter)
+│   │   └── dto/
+│   │       ├── TransacaoPixRequestDTO
+│   │       ├── TransacaoPixUpdateRequestDTO
+│   │       └── TransacaoPixResponseDTO
+│   └── output/persistence/
+│       └── repository/
+│           └── TransacaoPixRepositoryAdapter (Driven Adapter)
+│
+├── application/                     ← Orquestração
+│   ├── mapper/
+│   ├── exception/
+│   └── usecases/
+│
+└── infrastructure/                  ← Configuração técnica
+    └── configuration/
+```
+
+### ✅ Benefícios da Arquitetura Implementada
+
+- ✅ **Domain Limpo** - Sem dependências de frameworks Spring/Jackson
+- ✅ **Ports Bem Definidas** - Interfaces no domain garantem contratos claros
+- ✅ **Adapters Separados** - Entrada (HTTP) e Saída (Persistência) independentes
+- ✅ **DTOs Específicos** - Annotations de serialização apenas nos DTOs, não no domain
+- ✅ **Inversão de Dependências** - Controller → Port (Interface) → Adapter
+- ✅ **Testabilidade** - Mock da Port sem necessidade de Spring
+- ✅ **Flexibilidade** - Trocar implementação de persistência sem afetar o domain
+
+### 🔄 Fluxo de Requisição
+
+```mermaid
+sequenceDiagram
+    participant Client as 🌐 HTTP Client
+    participant Controller as 🔴 Controller<br/>TransacaoPixController
+    participant DTO as 🟠 DTO Adapter<br/>TransacaoPixRequestDTO
+    participant Domain as 🟣 Domain<br/>TransacaoPixRequest
+    participant Port as 🟢 PORT<br/>TransacaoPersistencePort
+    participant Adapter as 🟧 Repository Adapter<br/>TransacaoPixRepositoryAdapter
+    participant JPA as 🟨 Spring Data<br/>TransacaoPixRepositoryJPA
+    participant DB as 🗄️ MySQL<br/>Database
+
+    Client->>Controller: POST /transacao-pix (JSON)
+    Note over Client,Controller: HTTP Request
+    
+    Controller->>DTO: receive TransacaoPixRequestDTO
+    Note over Controller,DTO: com @JsonProperty, @NotNull
+    
+    DTO->>Domain: toDomain()
+    Note over DTO,Domain: Converte para domain
+    
+    Domain->>Controller: TransacaoPixRequest
+    Note over Domain,Controller: Domínio limpo, sem annotations
+    
+    Controller->>Port: save(transacaoPixRequest)
+    Note over Controller,Port: Injeta a Interface (PORT)
+    
+    Port->>Adapter: implementa TransacaoPersistencePort
+    Note over Port,Adapter: Spring encontra implementação
+    
+    Adapter->>JPA: save(entity)
+    Note over Adapter,JPA: Converte domain para entity
+    
+    JPA->>DB: INSERT INTO transacao_pix
+    Note over JPA,DB: SQL Command
+    
+    DB->>JPA: uuid gerado
+    Note over DB,JPA: Database Response
+    
+    JPA->>Adapter: retorna TransacaoPixEntity
+    
+    Adapter->>Port: retorna TransacaoPixResponse
+    Note over Adapter,Port: Converte entity para domain
+    
+    Port->>Controller: TransacaoPixResponse
+    Note over Port,Controller: Domain Response (sem annotations)
+    
+    Controller->>DTO: TransacaoPixResponseDTO.fromDomain()
+    Note over Controller,DTO: Converte para DTO
+    
+    DTO->>Client: HTTP 200 (JSON)
+    Note over DTO,Client: com @JsonProperty
+```
 ## ⚙️ Executando os testes
 
 Entre no Projeto
@@ -115,7 +226,18 @@ E com isso logo será retornado algo parecido com esse body abaixo:
 }
 ```
 
-
+## ⚙️ Gerando testes com Cucumber
+```shell
+mvn archetype:generate                     \
+"-DarchetypeGroupId=io.cucumber"           \
+"-DarchetypeArtifactId=cucumber-archetype" \
+"-DarchetypeVersion=7.31.0"                \
+"-DartifactId=integrationtest"               \
+"-DgroupId=lab-a01-app-repository-payment"                  \
+"-Dpackage=com.example.payment"                  \
+"-Dversion=1.0.0-SNAPSHOT"                 \
+"-DinteractiveMode=false"
+```
 
 ## 🔗 Referencias
 * [Spring Cloud](https://spring.io/cloud)
@@ -123,4 +245,9 @@ E com isso logo será retornado algo parecido com esse body abaixo:
 * [Service Registration and Discovery](https://spring.io/guides/gs/service-registration-and-discovery)
 * [Docker Mysql](https://hub.docker.com/_/mysql)
 * [Flyway](https://www.red-gate.com/products/flyway/community/)
-* [SDKMAN](https://sdkman.io/) 
+* [SDKMAN](https://sdkman.io/)
+
+## 📚 Arquitetura Hexagonal (Ports & Adapters)
+* [Alistair Cockburn - Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
+* [Clean Architecture: A Craftsman's Guide to Software Structure and Design - Robert C. Martin](https://www.oreilly.com/library/view/clean-architecture-a/9780134494272/)
+* [Hexagonal Architecture Pattern](https://www.happycoders.eu/software-craft/hexagonal-architecture/) 

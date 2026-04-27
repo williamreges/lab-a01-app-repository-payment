@@ -1,4 +1,4 @@
-package com.example.payment.entrypoint.exception.model;
+package com.example.payment.infraestructure.exception.model;
 
 import java.util.List;
 

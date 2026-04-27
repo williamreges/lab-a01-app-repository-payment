@@ -1,57 +1,71 @@
-package com.example.payment.dataprovider.repository;
+package com.example.payment.adapter.output.persistence.repository;
 
 import com.example.payment.application.usecases.mapper.TransacaoPixEntityMapper;
 import com.example.payment.application.usecases.mapper.TransacaoPixResponseMapper;
+import com.example.payment.dataprovider.repository.TransacaoPixRepositoryJPA;
 import com.example.payment.dataprovider.repository.entity.TransacaoPixEntity;
 import com.example.payment.dataprovider.repository.spec.TransacaoPixEntitySpecification;
 import com.example.payment.dataprovider.repository.validation.impl.PaymentJPAValidation;
-import com.example.payment.application.domain.entity.TransacaoPixQueryRequest;
-import com.example.payment.application.domain.entity.TransacaoPixRequest;
-import com.example.payment.application.domain.entity.TransacaoPixUpdateRequest;
-import com.example.payment.application.domain.entity.TransacaoPixResponse;
+import com.example.payment.domain.entity.TransacaoPixQueryRequest;
+import com.example.payment.domain.entity.TransacaoPixRequest;
+import com.example.payment.domain.entity.TransacaoPixResponse;
+import com.example.payment.domain.entity.TransacaoPixUpdateRequest;
+import com.example.payment.domain.port.TransacaoPersistencePort;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
 
-@Service
-public class TransacaoPixRepository {
+/**
+ * Adapter que implementa o Port de persistência.
+ * Responsável pela comunicação com a camada de persistência (JPA/Banco de dados).
+ * Este é um adapter de saída (driven adapter) na arquitetura hexagonal.
+ * <p>
+ * O Spring injeta automaticamente este adapter quando o Port é solicitado.
+ * Localização: adapter/output/persistence/repository
+ */
+@Component
+public class TransacaoPixRepositoryAdapter implements TransacaoPersistencePort {
 
-    private static final Logger log = LogManager.getLogger(TransacaoPixRepository.class);
+    private static final Logger log = LogManager.getLogger(TransacaoPixRepositoryAdapter.class);
     private final TransacaoPixRepositoryJPA transacaoPixRepositoryJPA;
     private final PaymentJPAValidation paymentJPAValidation;
 
-    public TransacaoPixRepository(TransacaoPixRepositoryJPA transacaoPixRepositoryJPA, PaymentJPAValidation paymentJPAValidation) {
+    public TransacaoPixRepositoryAdapter(TransacaoPixRepositoryJPA transacaoPixRepositoryJPA,
+                                         PaymentJPAValidation paymentJPAValidation) {
         this.transacaoPixRepositoryJPA = transacaoPixRepositoryJPA;
         this.paymentJPAValidation = paymentJPAValidation;
     }
 
+    @Override
     public String save(TransacaoPixRequest request) {
         log.info("Start Method save {}", request);
         try {
-            return saveRequest(request);
+            return saveRequest(request)
+                    .map(TransacaoPixEntity::getCodigoTrancacao)
+                    .map(UUID::toString)
+                    .orElse("");
         } catch (DataAccessException dataAccessException) {
             paymentJPAValidation.messageExceptionFactory(dataAccessException);
         }
         return "";
     }
 
-    private String saveRequest(TransacaoPixRequest request) {
-        TransacaoPixEntity bean = TransacaoPixEntityMapper.INSTANCE.mapperToEntity(request);
-        bean = transacaoPixRepositoryJPA.save(bean);
-        log.info("End Method save {}", request);
-        return bean.getCodigoTrancacao();
-    }
-
+    @Override
     public void delete(String id) {
-        transacaoPixRepositoryJPA.deleteById(id);
+        log.info("Start Method delete {}", id);
+        transacaoPixRepositoryJPA.deleteById(UUID.fromString(id));
+        log.info("End Method delete {}", id);
     }
 
+    @Override
     public void update(String id, TransacaoPixUpdateRequest request) {
         log.info("Start Method update {}", request);
         TransacaoPixEntity bean = requireOne(id);
@@ -60,11 +74,14 @@ public class TransacaoPixRepository {
         log.info("End Method update {}", request);
     }
 
+    @Override
     public TransacaoPixResponse getById(String id) {
+        log.info("Start Method getById {}", id);
         TransacaoPixEntity original = requireOne(id);
         return toResponse(original);
     }
 
+    @Override
     public Page<TransacaoPixResponse> query(TransacaoPixQueryRequest request, Pageable pageable) {
         log.info("Start Method query {}", request);
         final var listEntity = transacaoPixRepositoryJPA
@@ -77,6 +94,12 @@ public class TransacaoPixRepository {
                 .toList());
     }
 
+    private Optional<TransacaoPixEntity> saveRequest(TransacaoPixRequest request) {
+        TransacaoPixEntity bean = TransacaoPixEntityMapper.INSTANCE.mapperToEntity(request);
+        bean = transacaoPixRepositoryJPA.save(bean);
+        log.info("End Method save {}", request);
+        return Optional.ofNullable(bean);
+    }
 
     private TransacaoPixResponse toResponse(TransacaoPixEntity original) {
         log.info("Start Method toResponse {}", original);
@@ -85,7 +108,7 @@ public class TransacaoPixRepository {
 
     private TransacaoPixEntity requireOne(String id) {
         log.info("Start Method requireOne {}", id);
-        return transacaoPixRepositoryJPA.findById(id)
+        return transacaoPixRepositoryJPA.findById(UUID.fromString(id))
                 .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
     }
 }

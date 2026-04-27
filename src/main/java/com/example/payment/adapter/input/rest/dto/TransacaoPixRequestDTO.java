@@ -1,61 +1,45 @@
-package com.example.payment.dataprovider.repository.entity;
+package com.example.payment.adapter.input.rest.dto;
 
-import com.example.payment.dataprovider.repository.converter.UUIDConverter;
-import jakarta.persistence.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.example.payment.domain.entity.TransacaoPixRequest;
+import jakarta.validation.constraints.NotNull;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
-@Table(name = "transacao_pix")
-public class TransacaoPixEntity implements Serializable {
+/**
+ * DTO para transferência de dados de entrada na API.
+ * Annotations de Jackson e Jakarta ficam aqui, não no domain.
+ */
+public class TransacaoPixRequestDTO {
 
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "codigo_trancacao", nullable = false)
-    private UUID codigoTrancacao;
-
-    @Column(name = "codigo_pessoa", nullable = false)
-    @Convert(converter = UUIDConverter.class)
+    @JsonProperty("codigoPessoa")
+    @NotNull(message = "codigoPessoa can not null")
     private UUID codigoPessoa;
 
-    @Column(name = "valor_trancacao", nullable = false)
+    @NotNull(message = "valorTrancacao can not null")
+    @JsonProperty("valorTrancacao")
     private BigDecimal valorTrancacao;
 
-    @Column(name = "data_trancacao")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonProperty("dataTrancacao")
     private LocalDateTime dataTrancacao;
 
-    @Column(name = "codigo_beneficiario", nullable = false)
-    @Convert(converter = UUIDConverter.class)
+    @JsonProperty("codigoBeneficiario")
     private UUID codigoBeneficiario;
 
-    @Column(name = "mensagem_transacao")
+    @JsonProperty("mensagemTransacao")
     private String mensagemTransacao;
 
-    public TransacaoPixEntity() {
+    public TransacaoPixRequestDTO() {
     }
 
-    public TransacaoPixEntity(UUID codigoTrancacao, UUID codigoPessoa, BigDecimal valorTrancacao, LocalDateTime dataTrancacao, UUID codigoBeneficiario, String mensagemTransacao) {
-        this.codigoTrancacao = codigoTrancacao;
+    public TransacaoPixRequestDTO(UUID codigoPessoa, BigDecimal valorTrancacao, LocalDateTime dataTrancacao, UUID codigoBeneficiario, String mensagemTransacao) {
         this.codigoPessoa = codigoPessoa;
         this.valorTrancacao = valorTrancacao;
         this.dataTrancacao = dataTrancacao;
         this.codigoBeneficiario = codigoBeneficiario;
         this.mensagemTransacao = mensagemTransacao;
-    }
-
-    public UUID getCodigoTrancacao() {
-        return codigoTrancacao;
-    }
-
-    public void setCodigoTrancacao(UUID codigoTrancacao) {
-        this.codigoTrancacao = codigoTrancacao;
     }
 
     public UUID getCodigoPessoa() {
@@ -96,5 +80,18 @@ public class TransacaoPixEntity implements Serializable {
 
     public void setMensagemTransacao(String mensagemTransacao) {
         this.mensagemTransacao = mensagemTransacao;
+    }
+
+    /**
+     * Converte para TransacaoPixRequest (domain model).
+     */
+    public TransacaoPixRequest toDomain() {
+        return new TransacaoPixRequest(
+            codigoPessoa,
+            valorTrancacao,
+            dataTrancacao,
+            codigoBeneficiario,
+            mensagemTransacao
+        );
     }
 }

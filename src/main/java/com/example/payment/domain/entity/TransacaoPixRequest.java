@@ -1,61 +1,27 @@
-package com.example.payment.dataprovider.repository.entity;
+package com.example.payment.domain.entity;
 
-import com.example.payment.dataprovider.repository.converter.UUIDConverter;
-import jakarta.persistence.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
-@Table(name = "transacao_pix")
-public class TransacaoPixEntity implements Serializable {
+/**
+ * Entidade de domínio que representa uma transação PIX.
+ * Sem annotations de framework - domínio limpo.
+ */
+public sealed class TransacaoPixRequest permits TransacaoPixUpdateRequest {
 
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "codigo_trancacao", nullable = false)
-    private UUID codigoTrancacao;
-
-    @Column(name = "codigo_pessoa", nullable = false)
-    @Convert(converter = UUIDConverter.class)
     private UUID codigoPessoa;
-
-    @Column(name = "valor_trancacao", nullable = false)
     private BigDecimal valorTrancacao;
-
-    @Column(name = "data_trancacao")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dataTrancacao;
-
-    @Column(name = "codigo_beneficiario", nullable = false)
-    @Convert(converter = UUIDConverter.class)
     private UUID codigoBeneficiario;
-
-    @Column(name = "mensagem_transacao")
     private String mensagemTransacao;
 
-    public TransacaoPixEntity() {
-    }
-
-    public TransacaoPixEntity(UUID codigoTrancacao, UUID codigoPessoa, BigDecimal valorTrancacao, LocalDateTime dataTrancacao, UUID codigoBeneficiario, String mensagemTransacao) {
-        this.codigoTrancacao = codigoTrancacao;
+    public TransacaoPixRequest(UUID codigoPessoa, BigDecimal valorTrancacao, LocalDateTime dataTrancacao, UUID codigoBeneficiario, String mensagemTransacao) {
         this.codigoPessoa = codigoPessoa;
         this.valorTrancacao = valorTrancacao;
         this.dataTrancacao = dataTrancacao;
         this.codigoBeneficiario = codigoBeneficiario;
         this.mensagemTransacao = mensagemTransacao;
-    }
-
-    public UUID getCodigoTrancacao() {
-        return codigoTrancacao;
-    }
-
-    public void setCodigoTrancacao(UUID codigoTrancacao) {
-        this.codigoTrancacao = codigoTrancacao;
     }
 
     public UUID getCodigoPessoa() {

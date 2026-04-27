@@ -1,8 +1,10 @@
 package com.example.payment.dataprovider.repository.spec;
 
 import com.example.payment.dataprovider.repository.entity.TransacaoPixEntity;
-import com.example.payment.application.domain.entity.TransacaoPixQueryRequest;
+import com.example.payment.domain.entity.TransacaoPixQueryRequest;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.UUID;
 
 public final class TransacaoPixEntitySpecification {
 
@@ -18,22 +20,21 @@ public final class TransacaoPixEntitySpecification {
     }
 
 
-    private static Specification<TransacaoPixEntity> getCriterioCodigoBeneficiario(String codigoBeneficiario) {
+    private static Specification<TransacaoPixEntity> getCriterioCodigoBeneficiario(UUID codigoBeneficiario) {
         return (root, query, criteriaBuilder) -> {
             if (codigoBeneficiario == null) {
                 return null;
             }
-            return criteriaBuilder.equal(root.get("codigoBeneficiario"), codigoBeneficiario);
+            return criteriaBuilder.equal(root.get("codigoBeneficiario"), codigoBeneficiario.toString());
         };
     }
 
-    private static Specification<TransacaoPixEntity> getCriterioCodigoPessoa(String codigoPessoa) {
+    private static Specification<TransacaoPixEntity> getCriterioCodigoPessoa(UUID codigoPessoa) {
         return (root, query, criteriaBuilder) -> {
             if (codigoPessoa == null) {
                 return null;
             }
-            return criteriaBuilder.equal(root.get("codigoPessoa"),
-                    codigoPessoa);
+            return criteriaBuilder.equal(root.get("codigoPessoa"), codigoPessoa.toString());
         };
 
     }
@@ -44,7 +45,7 @@ public final class TransacaoPixEntitySpecification {
                 return null;
             }
             return criteriaBuilder.like(criteriaBuilder.lower(root.get("mensagemTransacao")),
-                   "%" +  mensagemTransacao + "%");
+                    "%" + mensagemTransacao + "%");
         };
 
     }

@@ -1,53 +1,62 @@
-package com.example.payment.dataprovider.repository.entity;
+package com.example.payment.adapter.input.rest.dto;
 
-import com.example.payment.dataprovider.repository.converter.UUIDConverter;
-import jakarta.persistence.*;
+import com.example.payment.domain.entity.TransacaoPixResponse;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
-@Table(name = "transacao_pix")
-public class TransacaoPixEntity implements Serializable {
+/**
+ * DTO para transferência de dados de saída na API.
+ * Annotations de Jackson ficam aqui, não no domain.
+ */
+public class TransacaoPixResponseDTO {
 
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "codigo_trancacao", nullable = false)
+    @JsonProperty("codigoTrancacao")
     private UUID codigoTrancacao;
 
-    @Column(name = "codigo_pessoa", nullable = false)
-    @Convert(converter = UUIDConverter.class)
+    @JsonProperty("codigoPessoa")
     private UUID codigoPessoa;
 
-    @Column(name = "valor_trancacao", nullable = false)
+    @JsonProperty("valorTrancacao")
     private BigDecimal valorTrancacao;
 
-    @Column(name = "data_trancacao")
+    @JsonProperty("dataTrancacao")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dataTrancacao;
 
-    @Column(name = "codigo_beneficiario", nullable = false)
-    @Convert(converter = UUIDConverter.class)
+    @JsonProperty("codigoBeneficiario")
     private UUID codigoBeneficiario;
 
-    @Column(name = "mensagem_transacao")
+    @JsonProperty("mensagemTransacao")
     private String mensagemTransacao;
 
-    public TransacaoPixEntity() {
+    public TransacaoPixResponseDTO() {
     }
 
-    public TransacaoPixEntity(UUID codigoTrancacao, UUID codigoPessoa, BigDecimal valorTrancacao, LocalDateTime dataTrancacao, UUID codigoBeneficiario, String mensagemTransacao) {
+    public TransacaoPixResponseDTO(UUID codigoTrancacao, UUID codigoPessoa, BigDecimal valorTrancacao, LocalDateTime dataTrancacao, UUID codigoBeneficiario, String mensagemTransacao) {
         this.codigoTrancacao = codigoTrancacao;
         this.codigoPessoa = codigoPessoa;
         this.valorTrancacao = valorTrancacao;
         this.dataTrancacao = dataTrancacao;
         this.codigoBeneficiario = codigoBeneficiario;
         this.mensagemTransacao = mensagemTransacao;
+    }
+
+    /**
+     * Factory method para converter TransacaoPixResponse (domain) para DTO de saída.
+     */
+    public static TransacaoPixResponseDTO fromDomain(TransacaoPixResponse response) {
+        return new TransacaoPixResponseDTO(
+            response.codigoTrancacao(),
+            response.codigoPessoa(),
+            response.valorTrancacao(),
+            response.dataTrancacao(),
+            response.codigoBeneficiario(),
+            response.mensagemTransacao()
+        );
     }
 
     public UUID getCodigoTrancacao() {
