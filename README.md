@@ -248,6 +248,5 @@ mvn archetype:generate                     \
 * [SDKMAN](https://sdkman.io/)
 
 ## 📚 Arquitetura Hexagonal (Ports & Adapters)
-* [Alistair Cockburn - Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
 * [Clean Architecture: A Craftsman's Guide to Software Structure and Design - Robert C. Martin](https://www.oreilly.com/library/view/clean-architecture-a/9780134494272/)
 * [Hexagonal Architecture Pattern](https://www.happycoders.eu/software-craft/hexagonal-architecture/) 
