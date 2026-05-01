@@ -10,6 +10,7 @@ import com.example.payment.domain.entity.TransacaoPixQueryRequest;
 import com.example.payment.domain.entity.TransacaoPixRequest;
 import com.example.payment.domain.entity.TransacaoPixResponse;
 import com.example.payment.domain.entity.TransacaoPixUpdateRequest;
+import com.example.payment.domain.exception.EntityNotFoundBusinessException;
 import com.example.payment.domain.port.TransacaoPersistencePort;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +20,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -109,6 +109,6 @@ public class TransacaoPixRepositoryAdapter implements TransacaoPersistencePort {
     private TransacaoPixEntity requireOne(String id) {
         log.info("Start Method requireOne {}", id);
         return transacaoPixRepositoryJPA.findById(UUID.fromString(id))
-                .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundBusinessException("Resource not found: " + id));
     }
 }

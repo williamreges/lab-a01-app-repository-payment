@@ -12,75 +12,24 @@ import java.util.UUID;
  * DTO para transferência de dados de entrada na API.
  * Annotations de Jackson e Jakarta ficam aqui, não no domain.
  */
-public class TransacaoPixRequestDTO {
-
+public record TransacaoPixRequestDTO(
     @JsonProperty("codigoPessoa")
     @NotNull(message = "codigoPessoa can not null")
-    private UUID codigoPessoa;
+    UUID codigoPessoa,
 
     @NotNull(message = "valorTrancacao can not null")
     @JsonProperty("valorTrancacao")
-    private BigDecimal valorTrancacao;
+    BigDecimal valorTrancacao,
 
     @JsonProperty("dataTrancacao")
-    private LocalDateTime dataTrancacao;
+    LocalDateTime dataTrancacao,
 
     @JsonProperty("codigoBeneficiario")
-    private UUID codigoBeneficiario;
+    UUID codigoBeneficiario,
 
     @JsonProperty("mensagemTransacao")
-    private String mensagemTransacao;
-
-    public TransacaoPixRequestDTO() {
-    }
-
-    public TransacaoPixRequestDTO(UUID codigoPessoa, BigDecimal valorTrancacao, LocalDateTime dataTrancacao, UUID codigoBeneficiario, String mensagemTransacao) {
-        this.codigoPessoa = codigoPessoa;
-        this.valorTrancacao = valorTrancacao;
-        this.dataTrancacao = dataTrancacao;
-        this.codigoBeneficiario = codigoBeneficiario;
-        this.mensagemTransacao = mensagemTransacao;
-    }
-
-    public UUID getCodigoPessoa() {
-        return codigoPessoa;
-    }
-
-    public void setCodigoPessoa(UUID codigoPessoa) {
-        this.codigoPessoa = codigoPessoa;
-    }
-
-    public BigDecimal getValorTrancacao() {
-        return valorTrancacao;
-    }
-
-    public void setValorTrancacao(BigDecimal valorTrancacao) {
-        this.valorTrancacao = valorTrancacao;
-    }
-
-    public LocalDateTime getDataTrancacao() {
-        return dataTrancacao;
-    }
-
-    public void setDataTrancacao(LocalDateTime dataTrancacao) {
-        this.dataTrancacao = dataTrancacao;
-    }
-
-    public UUID getCodigoBeneficiario() {
-        return codigoBeneficiario;
-    }
-
-    public void setCodigoBeneficiario(UUID codigoBeneficiario) {
-        this.codigoBeneficiario = codigoBeneficiario;
-    }
-
-    public String getMensagemTransacao() {
-        return mensagemTransacao;
-    }
-
-    public void setMensagemTransacao(String mensagemTransacao) {
-        this.mensagemTransacao = mensagemTransacao;
-    }
+    String mensagemTransacao
+) {
 
     /**
      * Converte para TransacaoPixRequest (domain model).
