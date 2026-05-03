@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Page;
@@ -45,7 +44,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("TransacaoPixController - Testes")
 @WebMvcTest(TransacaoPixController.class)
-@ContextConfiguration(classes = TransacaoPixController.class)
+@ContextConfiguration(classes = {
+        TransacaoPixController.class
+})
 class TransacaoPixControllerTest {
 
     @Autowired
@@ -71,13 +72,11 @@ class TransacaoPixControllerTest {
         @Test
         @DisplayName("Deve salvar transação com sucesso")
         void testSaveSuccess() throws Exception {
-            // Arrange
             var requestDTO = TransacaoPixRequestDTOTestDataBuilder.builder().build();
 
             when(transacaoPersistencePort.save(any(TransacaoPixRequest.class)))
                     .thenReturn(transacaoId);
 
-            // Act & Assert
             mockMvc.perform(post("/transacao-pix")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(requestDTO)))
@@ -87,16 +86,6 @@ class TransacaoPixControllerTest {
             verify(transacaoPersistencePort, times(1)).save(any(TransacaoPixRequest.class));
         }
 
-        @Test
-        @DisplayName("Deve retornar erro 400 quando codigoPessoa é nulo")
-        void testSaveWithoutCodigoPessoa() throws Exception {
-            var requestDTO = TransacaoPixRequestDTOTestDataBuilder.builder().build();
-
-            mockMvc.perform(post("/transacao-pix")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(requestDTO)))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested

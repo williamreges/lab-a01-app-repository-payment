@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class CustomExceptionHandler {
+public class CustomBusinessExceptionHandler {
 
 
     @ExceptionHandler(BusinessException.class)

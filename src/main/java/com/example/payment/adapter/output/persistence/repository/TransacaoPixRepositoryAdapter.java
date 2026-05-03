@@ -95,7 +95,7 @@ public class TransacaoPixRepositoryAdapter implements TransacaoPersistencePort {
     }
 
     private Optional<TransacaoPixEntity> saveRequest(TransacaoPixRequest request) {
-        TransacaoPixEntity bean = TransacaoPixEntityMapper.INSTANCE.mapperToEntity(request);
+        var bean = TransacaoPixEntityMapper.INSTANCE.mapperToEntity(request);
         bean = transacaoPixRepositoryJPA.save(bean);
         log.info("End Method save {}", request);
         return Optional.ofNullable(bean);
