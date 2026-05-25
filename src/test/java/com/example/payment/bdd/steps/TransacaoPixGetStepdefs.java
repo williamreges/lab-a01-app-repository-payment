@@ -44,7 +44,6 @@ public class TransacaoPixGetStepdefs {
                         .when()
                         .get(ENDPOINT + pixGetScenario.obterCodigoTransacaoPix())
                         .then()
-                        .assertThat().statusCode(200)
                         .extract()
                         .response();
 
@@ -53,6 +52,7 @@ public class TransacaoPixGetStepdefs {
 
     @Then("o sistema deve retornar os dados da transação Pix com sucesso")
     public void oSistemaDeveRetornarOsDadosDaTransaçãoPixComSucesso() {
+        pixGetScenario.getResponse().then().assertThat().statusCode(200);
         var responseDTO = pixGetScenario.getResponse().as(TransacaoPixResponseDTO.class);
         Assertions.assertNotNull(responseDTO);
     }
@@ -62,25 +62,9 @@ public class TransacaoPixGetStepdefs {
         pixGetScenario.addCodigoTransacaoPix(UUID.fromString(codigoTransacaoPix));
     }
 
-    @When("eu tento buscar a transação Pix pelo id")
-    public void euTentoBuscarATransaçãoPixPeloId() {
-        var response =
-                given()
-                        .port(serverPort)
-                        .contentType(ContentType.JSON)
-                        .headers("correlationID", UUID.randomUUID().toString())
-                        .when()
-                        .get(ENDPOINT + pixGetScenario.obterCodigoTransacaoPix())
-                        .then()
-                        .assertThat().statusCode(404)
-                        .extract()
-                        .response();
-
-        pixGetScenario.addReponse(response);
-    }
-
     @Then("o sistema deve retornar um erro informando que a transação não foi encontrada")
     public void oSistemaDeveRetornarUmErroInformandoQueATransaçãoNãoFoiEncontrada() {
+        pixGetScenario.getResponse().then().assertThat().statusCode(404);
         var responseExceptionDTO = pixGetScenario.getResponse().as(ResponseExceptionCustom.class);
         Assertions.assertNotNull(responseExceptionDTO);
     }
