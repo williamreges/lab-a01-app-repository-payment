@@ -15,7 +15,7 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, " +
         "html:target/cucumber-reports/cucumber-report.html, " +
         "json:target/cucumber-reports/cucumber.json")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example.payment.bdd.steps")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example.payment.bdd")
 @ConfigurationParametersResource("cucumber.properties")
 public class RunCucumberIT {
 }

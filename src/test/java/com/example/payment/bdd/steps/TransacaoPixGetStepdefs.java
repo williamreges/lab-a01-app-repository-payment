@@ -1,6 +1,5 @@
 package com.example.payment.bdd.steps;
 
-import com.example.payment.AppRepositoryPaymentApplication;
 import com.example.payment.adapter.input.rest.dto.TransacaoPixResponseDTO;
 import com.example.payment.bdd.scenario.TransacaoPixGetScenario;
 import com.example.payment.infraestructure.exception.model.ResponseExceptionCustom;
@@ -9,19 +8,15 @@ import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.spring.CucumberContextConfiguration;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 
-@CucumberContextConfiguration
-@SpringBootTest(classes = AppRepositoryPaymentApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TransacaoPixGetStepdefs {
 
     private static final String ENDPOINT = "/transacao-pix/";
