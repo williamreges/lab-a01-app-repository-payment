@@ -124,6 +124,22 @@ Configuração de beans de teste para injeção em testes de integração.
 ./mvnw test
 ```
 
+
+### Executar testes de integração (Failsafe)
+```bash
+mvn test-compile failsafe:integration-test failsafe:verify -Dfailsafe.skipAfterFailureCount=1
+```
+Esse comando executa os testes de integração localizados em `src/test/java/bdd` (ou, se aplicável, em `src/integrationtest/java`) usando o plugin Failsafe. Ele compila os testes, executa os testes de integração e verifica os resultados. O parâmetro `-Dfailsafe.skipAfterFailureCount=1` faz com que a execução pare após a primeira falha, facilitando a identificação rápida de problemas.
+
+**Resumo dos estágios:**
+- `test-compile`: compila os testes
+- `failsafe:integration-test`: executa testes de integração (`*IT.java`, `*ITCase.java`, etc.)
+- `failsafe:verify`: verifica e reporta falhas
+- `-Dfailsafe.skipAfterFailureCount=1`: interrompe após a primeira falha
+
+**Localização dos testes de integração:**
+- `src/test/java/bdd`
+
 ### Executar testes de uma classe específica
 ```bash
 ./mvnw test -Dtest=TransacaoPixControllerTest
