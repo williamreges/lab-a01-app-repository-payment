@@ -1,7 +1,7 @@
 Feature: Atualizar um registro de PIX
 
   Scenario: Atualizar transação Pix com sucesso
-    Given que existe uma transação Pix com o id para atualizar
+    Given que existe uma transação Pix com o id "5966af19-57f2-4c2c-952a-3299e8e4a4b5" para atualizar
     And que possuo os dados válidos para atualizar a transação Pix
       """
       {
@@ -12,11 +12,11 @@ Feature: Atualizar um registro de PIX
         "mensagemTransacao": "PIX teste de atualizacao"
       }
       """
-    When eu envio uma requisição para atualizar a transação Pix
+    When eu envio uma requisição com id "5966af19-57f2-4c2c-952a-3299e8e4a4b5" para atualizar a transação Pix
     Then o sistema deve retornar o status de transação Pix atualizada com sucesso
 
   Scenario: Tentar atualizar transação Pix inexistente
-    Given que não existe uma transação Pix para atualizar com o id "b989b12b-f4bf-4d7c-b25a-9c4219b56ef0"
+    Given que existe uma transação Pix com o id "5966af19-57f2-4c2c-952a-3299e8e4a4b5" para atualizar
     And que possuo os dados válidos para atualizar a transação Pix
       """
       {
@@ -27,5 +27,5 @@ Feature: Atualizar um registro de PIX
         "mensagemTransacao": "PIX teste de atualizacao com erro"
       }
       """
-    When eu envio uma requisição para atualizar a transação Pix
+    When eu envio uma requisição com id "1967162d-e651-4ef7-82d5-8b05148819fd" para atualizar a transação Pix
     Then o sistema deve retornar um erro informando que a transação a atualizar não foi encontrada

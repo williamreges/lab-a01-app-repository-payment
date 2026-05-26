@@ -28,13 +28,13 @@ public class TransacaoPixGetStepdefs {
     private TransacaoPixGetScenario pixGetScenario;
 
 
-    @Given("que existe uma transação Pix com o id")
-    public void queExisteUmaTransaçãoPixComOId() {
-        pixGetScenario.gerarNovoRegistroPixDataBase();
+    @Given("que existe uma transação Pix com o id {string}")
+    public void queExisteUmaTransaçãoPixComOId(String codigoTransacao) {
+        pixGetScenario.gerarNovoRegistroPixDataBase(codigoTransacao);
     }
 
-    @When("eu buscar a transação Pix pelo id")
-    public void euBuscarATransaçãoPixPeloId() {
+    @When("eu buscar a transação Pix pelo id {string}")
+    public void euBuscarATransaçãoPixPeloId(String codigoTransacao) {
 
         var response =
                 given()
@@ -42,7 +42,7 @@ public class TransacaoPixGetStepdefs {
                         .contentType(ContentType.JSON)
                         .headers("correlationID", UUID.randomUUID().toString())
                         .when()
-                        .get(ENDPOINT + pixGetScenario.obterCodigoTransacaoPix())
+                        .get(ENDPOINT + codigoTransacao)
                         .then()
                         .extract()
                         .response();
@@ -55,11 +55,6 @@ public class TransacaoPixGetStepdefs {
         pixGetScenario.getResponse().then().assertThat().statusCode(200);
         var responseDTO = pixGetScenario.getResponse().as(TransacaoPixResponseDTO.class);
         Assertions.assertNotNull(responseDTO);
-    }
-
-    @Given("que não existe uma transação Pix com o id {string}")
-    public void queNãoExisteUmaTransaçãoPixComOId(String codigoTransacaoPix) {
-        pixGetScenario.addCodigoTransacaoPix(UUID.fromString(codigoTransacaoPix));
     }
 
     @Then("o sistema deve retornar um erro informando que a transação não foi encontrada")

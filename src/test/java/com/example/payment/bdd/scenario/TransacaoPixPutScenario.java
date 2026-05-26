@@ -17,25 +17,16 @@ public class TransacaoPixPutScenario {
     private TransacaoPixRepositoryJPA repositoryJPA;
 
     private Object requestBody;
-    private UUID novoCodigoTransacaoPix;
     private Response response;
 
-    public void gerarNovoRegistroPixDataBase() {
+    public void gerarNovoRegistroPixDataBase(String codigoTransacao) {
         var newEntity = TransacaoPixEntityTestDataBuilder.builder()
-                .comCodigoTrancacao(null)
+                .comCodigoTrancacao(UUID.fromString(codigoTransacao))
                 .build();
-        novoCodigoTransacaoPix = repositoryJPA
-                .save(newEntity)
-                .getCodigoTrancacao();
+        repositoryJPA
+                .save(newEntity);
     }
 
-    public void addCodigoTransacaoPix(UUID codigo) {
-        this.novoCodigoTransacaoPix = codigo;
-    }
-
-    public UUID obterCodigoTransacaoPix() {
-        return novoCodigoTransacaoPix;
-    }
 
     public void gerarDadosValidos(Object dto) {
         this.requestBody = dto;

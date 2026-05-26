@@ -1,7 +1,12 @@
 package com.example.payment.dataprovider.repository.entity;
 
 import com.example.payment.dataprovider.repository.converter.UUIDConverter;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -16,7 +21,6 @@ public class TransacaoPixEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "codigo_trancacao", nullable = false)
     private UUID codigoTrancacao;
 
@@ -39,6 +43,13 @@ public class TransacaoPixEntity implements Serializable {
     private String mensagemTransacao;
 
     public TransacaoPixEntity() {
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (codigoTrancacao == null) {
+            codigoTrancacao = UUID.randomUUID();
+        }
     }
 
     public TransacaoPixEntity(UUID codigoTrancacao, UUID codigoPessoa, BigDecimal valorTrancacao, LocalDateTime dataTrancacao, UUID codigoBeneficiario, String mensagemTransacao) {

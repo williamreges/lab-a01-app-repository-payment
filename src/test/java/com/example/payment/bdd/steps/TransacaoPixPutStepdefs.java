@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import java.util.UUID;
-
 import static io.restassured.RestAssured.given;
 
 public class TransacaoPixPutStepdefs {
@@ -30,9 +28,9 @@ public class TransacaoPixPutStepdefs {
     @Autowired
     private TransacaoPixPutScenario pixPutScenario;
 
-    @Given("que existe uma transação Pix com o id para atualizar")
-    public void queExisteUmaTransacaoPixComOId() {
-        pixPutScenario.gerarNovoRegistroPixDataBase();
+    @Given("que existe uma transação Pix com o id {string} para atualizar")
+    public void queExisteUmaTransacaoPixComOId(String codigoTransacao) {
+        pixPutScenario.gerarNovoRegistroPixDataBase(codigoTransacao);
     }
 
     @And("que possuo os dados válidos para atualizar a transação Pix")
@@ -40,15 +38,15 @@ public class TransacaoPixPutStepdefs {
         pixPutScenario.gerarDadosValidos(dto);
     }
 
-    @When("eu envio uma requisição para atualizar a transação Pix")
-    public void euEnvioUmaRequisicaoParaAtualizarATransacaoPix() {
+    @When("eu envio uma requisição com id {string} para atualizar a transação Pix")
+    public void euEnvioUmaRequisicaoParaAtualizarATransacaoPix(String codigoTransacao) {
         var response =
                 given()
                         .port(serverPort)
                         .contentType(ContentType.JSON)
                         .body(pixPutScenario.getRequestBody())
                         .when()
-                        .put(ENDPOINT + pixPutScenario.obterCodigoTransacaoPix())
+                        .put(ENDPOINT + codigoTransacao)
                         .then()
                         .extract()
                         .response();
@@ -65,11 +63,6 @@ public class TransacaoPixPutStepdefs {
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
         return mapper.readValue(docString, TransacaoPixUpdateRequestDTO.class);
-    }
-
-    @Given("que não existe uma transação Pix para atualizar com o id {string}")
-    public void queNaoExisteUmaTransacaoPixComOId(String codigoTransacaoPix) {
-        pixPutScenario.addCodigoTransacaoPix(UUID.fromString(codigoTransacaoPix));
     }
 
     @Then("o sistema deve retornar um erro informando que a transação a atualizar não foi encontrada")
