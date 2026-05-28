@@ -1,43 +1,27 @@
-package com.example.payment.bdd.scenario;
+package com.example.payment.bdd.common;
 
-import com.example.payment.dataprovider.repository.TransacaoPixRepositoryJPA;
-import com.example.payment.dataprovider.repository.entity.TransacaoPixEntity;
-import io.cucumber.spring.ScenarioScope;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 
-@Component
-@ScenarioScope
-public class TransacaoPixQueryScenario {
+
+public abstract class QueryPageFeature {
 
     @LocalServerPort
     private int serverPort;
 
     private Response response;
-
-    @Autowired
-    private TransacaoPixRepositoryJPA repositoryJPA;
-
     private Integer page;
     private Integer size;
     private String sort;
     private Map<String, String> parametros;
 
-
-    public void criarTransacoesPixNoBanco(@MonotonicNonNull List<TransacaoPixEntity> dataTable) {
-        repositoryJPA.saveAll(dataTable);
-    }
 
     public void addResponse(Response response) {
         this.response = response;
@@ -122,10 +106,6 @@ public class TransacaoPixQueryScenario {
 
     public boolean existeParametrosParaFiltragem() {
         return Objects.nonNull(parametros) && !parametros.isEmpty();
-    }
-
-    public void limparBanco() {
-        repositoryJPA.deleteAll();
     }
 
     public Integer getPage() {
