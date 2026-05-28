@@ -16,7 +16,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -89,9 +88,7 @@ public class TransacaoPixRepositoryAdapter implements TransacaoPersistencePort {
                         .buildSpecification(request), pageable);
 
         log.info("End Method query {}", request);
-        return new PageImpl<>(listEntity.stream()
-                .map(this::toResponse)
-                .toList());
+        return listEntity.map(this::toResponse);
     }
 
     private Optional<TransacaoPixEntity> saveRequest(TransacaoPixRequest request) {
