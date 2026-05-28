@@ -1,6 +1,6 @@
 package com.example.payment.bdd.steps;
 
-import com.example.payment.bdd.scenario.TransacaoPixQueryPageFeature;
+import com.example.payment.bdd.scenario.TransacaoPixQueryScenario;
 import com.example.payment.builder.TransacaoPixEntityTestDataBuilder;
 import com.example.payment.dataprovider.repository.entity.TransacaoPixEntity;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,7 +27,7 @@ public class TransacaoPixQueryStepdefs {
     private static final String ENDPOINT = "/transacao-pix";
 
     @Autowired
-    private TransacaoPixQueryPageFeature pixQueryScenario;
+    private TransacaoPixQueryScenario pixQueryScenario;
 
     @DataTableType
     public TransacaoPixEntity authorEntry(Map<String, String> entry) {

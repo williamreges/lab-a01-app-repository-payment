@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @ScenarioScope
-public class TransacaoPixQueryPageFeature extends QueryPageFeature {
+public class TransacaoPixQueryScenario extends QueryPageFeature {
 
     @Autowired
     private TransacaoPixRepositoryJPA repositoryJPA;
