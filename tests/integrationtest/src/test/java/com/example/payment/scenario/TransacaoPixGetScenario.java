@@ -11,13 +11,12 @@ import static io.restassured.RestAssured.given;
 public class TransacaoPixGetScenario {
 
     private static final int SERVER_PORT = 8000;
-    private static final String ENDPOINT = "/transacao-pix/";
+    private static final String ENDPOINT = "/transacao-pix/{id}";
 
     private Response response;
 
     public void gerarMassaTransacaoPix(String codigoTransacao) {
         //TODO pode até gerar uma massa a partir desse método
-//        this.codigoTransacao = codigoTransacao;
     }
 
     public void addReponse(Response response) {
@@ -34,7 +33,7 @@ public class TransacaoPixGetScenario {
                 .contentType(ContentType.JSON)
                 .headers("correlationID", UUID.randomUUID().toString())
                 .when()
-                .get(ENDPOINT + codigoTransacao)
+                .get(ENDPOINT, codigoTransacao)
                 .then()
                 .extract()
                 .response();
