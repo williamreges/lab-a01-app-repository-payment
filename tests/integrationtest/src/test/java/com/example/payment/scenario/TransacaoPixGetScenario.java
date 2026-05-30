@@ -1,41 +1,24 @@
 package com.example.payment.scenario;
 
-import io.restassured.http.ContentType;
+import com.example.payment.common.QueryPageFeature;
 import io.restassured.response.Response;
 
-import java.util.UUID;
 
-import static io.restassured.RestAssured.given;
-
-
-public class TransacaoPixGetScenario {
+public class TransacaoPixGetScenario extends QueryPageFeature {
 
     private static final int SERVER_PORT = 8000;
+    private static final String BASE_URI = "http://localhost";
     private static final String ENDPOINT = "/transacao-pix/{id}";
 
-    private Response response;
+    public TransacaoPixGetScenario() {
+        super(BASE_URI, SERVER_PORT);
+    }
 
     public void gerarMassaTransacaoPix(String codigoTransacao) {
         //TODO pode até gerar uma massa a partir desse método
     }
 
-    public void addReponse(Response response) {
-        this.response = response;
-    }
-
-    public Response getResponse() {
-        return response;
-    }
-
-    public Response execulteRequisicaoRest(String codigoTransacao) {
-        return given()
-                .port(SERVER_PORT)
-                .contentType(ContentType.JSON)
-                .headers("correlationID", UUID.randomUUID().toString())
-                .when()
-                .get(ENDPOINT, codigoTransacao)
-                .then()
-                .extract()
-                .response();
+    public Response requisicaoRest(String codigoTransacao) {
+        return execulte(ENDPOINT, codigoTransacao);
     }
 }

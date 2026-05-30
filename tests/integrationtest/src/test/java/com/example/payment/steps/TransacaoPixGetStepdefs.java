@@ -25,8 +25,8 @@ public class TransacaoPixGetStepdefs {
 
     @When("eu buscar a transação Pix pelo id {string}")
     public void euBuscarATransaçãoPixPeloId(String codigoTransacao) {
-        var response = pixGetScenario.execulteRequisicaoRest(codigoTransacao);
-        pixGetScenario.addReponse(response);
+        var response = pixGetScenario.requisicaoRest(codigoTransacao);
+        pixGetScenario.addResponse(response);
     }
 
     @Then("o sistema deve retornar os dados da transação Pix id {string} com sucesso")
