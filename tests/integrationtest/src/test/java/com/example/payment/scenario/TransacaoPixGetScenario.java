@@ -1,10 +1,10 @@
 package com.example.payment.scenario;
 
-import com.example.payment.common.QueryPageFeature;
+import com.example.payment.common.RestFeature;
 import io.restassured.response.Response;
 
 
-public class TransacaoPixGetScenario extends QueryPageFeature {
+public class TransacaoPixGetScenario extends RestFeature {
 
     private static final int SERVER_PORT = 8000;
     private static final String BASE_URI = "http://localhost";
@@ -20,6 +20,6 @@ public class TransacaoPixGetScenario extends QueryPageFeature {
     }
 
     public Response requisicaoRest(String codigoTransacao) {
-        return execute(ENDPOINT, codigoTransacao);
+        return executeGet(ENDPOINT, codigoTransacao);
     }
 }

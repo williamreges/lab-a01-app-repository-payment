@@ -1,5 +1,6 @@
 package com.example.payment.common;
 
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -9,7 +10,7 @@ import java.util.Objects;
 import static io.restassured.RestAssured.given;
 
 
-public abstract class QueryPageFeature {
+public abstract class RestFeature {
 
     private Response response;
     private Integer page;
@@ -17,20 +18,25 @@ public abstract class QueryPageFeature {
     private String sort;
     private Map<String, String> parametros;
     private Map<String, Object> heades;
+    private Object requestBody;
     private Integer serverPort;
     private final String baseUri;
 
-    protected QueryPageFeature(String baseUri, Integer serverPort) {
+    protected RestFeature(String baseUri, Integer serverPort) {
         this.baseUri = baseUri;
         this.serverPort = serverPort;
     }
 
-    public void adHeaders(Map<String, Object> headers){
+    public void addHeaders(Map<String, Object> headers){
         this.heades = headers;
     }
 
     public void addParameters(Map<String, String> parameters) {
         this.parametros = parameters;
+    }
+
+    public void addBody(Object requestBody){
+        this.requestBody = requestBody;
     }
 
     public void addNumberPageAndSize(Integer page, Integer size) {
@@ -60,7 +66,30 @@ public abstract class QueryPageFeature {
         return response;
     }
 
-    public Response execute(String endpoint, Object... queries) {
+    public Response executeGet(String endpoint, Object... queries) {
+        var requestSpecification = configRequestSpecification();
+        return requestSpecification
+                .when()
+                .contentType(ContentType.JSON)
+                .get(endpoint, queries)
+                .then()
+                .extract()
+                .response();
+    }
+
+    public Response executePost(String endpoint, Object... queries) {
+        var requestSpecification = configRequestSpecification();
+        return requestSpecification
+                .when()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .post(endpoint, queries)
+                .then()
+                .extract()
+                .response();
+    }
+
+    private RequestSpecification configRequestSpecification() {
         var requestSpecification =
                 given().baseUri(baseUri)
                         .port(serverPort);
@@ -69,13 +98,7 @@ public abstract class QueryPageFeature {
         addQueryParamsRequest(requestSpecification);
         addPageRequest(requestSpecification);
         addOrderRequest(requestSpecification);
-
-        return requestSpecification
-                .when()
-                .get(endpoint, queries)
-                .then()
-                .extract()
-                .response();
+        return requestSpecification;
     }
 
     private void addHeadersRequest(RequestSpecification requestSpecification) {
@@ -107,39 +130,39 @@ public abstract class QueryPageFeature {
         }
     }
 
-    public boolean existHeaders() {
+    private boolean existHeaders() {
         return Objects.nonNull(heades) && !heades.isEmpty();
     }
 
-    public boolean existParametersParaFiltrate() {
+    private boolean existParametersParaFiltrate() {
         return Objects.nonNull(parametros) && !parametros.isEmpty();
     }
 
-    public boolean existPagination() {
+    private boolean existPagination() {
         return page != null && size != null;
     }
 
-    public boolean existOrdnance() {
+    private boolean existOrdnance() {
         return sort != null;
     }
 
-    public Integer getPage() {
+    private Integer getPage() {
         return this.page;
     }
 
-    public Integer getSize() {
+    private Integer getSize() {
         return this.size;
     }
 
-    public String getSort() {
+    private String getSort() {
         return sort;
     }
 
-    public Map<String, ?> getHeaders() {
+    private Map<String, ?> getHeaders() {
         return heades;
     }
 
-    public Map<String, ?> getFiltrates() {
+    private Map<String, ?> getFiltrates() {
         return parametros;
     }
 }
