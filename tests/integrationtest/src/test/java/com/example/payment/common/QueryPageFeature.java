@@ -5,7 +5,6 @@ import io.restassured.specification.RequestSpecification;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 
@@ -17,6 +16,7 @@ public abstract class QueryPageFeature {
     private Integer size;
     private String sort;
     private Map<String, String> parametros;
+    private Map<String, Object> heades;
     private Integer serverPort;
     private final String baseUri;
 
@@ -25,20 +25,20 @@ public abstract class QueryPageFeature {
         this.serverPort = serverPort;
     }
 
-    public void addResponse(Response response) {
-        this.response = response;
+    public void adHeaders(Map<String, Object> headers){
+        this.heades = headers;
     }
 
-    public void addServerPortRest(int serverPort) {
-        this.serverPort = serverPort;
+    public void addParameters(Map<String, String> parameters) {
+        this.parametros = parameters;
     }
 
-    public void addNumeroDaPaginaComQuantidadeDePaginas(Integer page, Integer size) {
+    public void addNumberPageAndSize(Integer page, Integer size) {
         this.page = page;
         this.size = size;
     }
 
-    public void addOrdenacaoPaginacao(String nomeAtributo, String direcao) {
+    public void addOrderPage(String nomeAtributo, String direcao) {
         if (nomeAtributo == null || nomeAtributo.isBlank()) {
             this.sort = null;
             return;
@@ -52,25 +52,23 @@ public abstract class QueryPageFeature {
         this.sort = String.format("%s,%s", nomeAtributo.trim(), dir);
     }
 
-    public void addParametrosFiltros(Map<String, String> parametros) {
-        this.parametros = parametros;
+    public void addResponse(Response response) {
+        this.response = response;
     }
 
     public Response getResponse() {
         return response;
     }
 
-    public Response execulte(String endpoint, Object...queries) {
+    public Response execute(String endpoint, Object... queries) {
         var requestSpecification =
                 given().baseUri(baseUri)
-                        .port(serverPort)
-                        .header("correlationID", UUID.randomUUID().toString());
+                        .port(serverPort);
 
-        adicionarPaginacao(requestSpecification);
-
-        adicionarQueryParams(requestSpecification);
-
-        adicionarOrdenacao(requestSpecification);
+        addHeadersRequest(requestSpecification);
+        addQueryParamsRequest(requestSpecification);
+        addPageRequest(requestSpecification);
+        addOrderRequest(requestSpecification);
 
         return requestSpecification
                 .when()
@@ -80,38 +78,49 @@ public abstract class QueryPageFeature {
                 .response();
     }
 
-    private void adicionarOrdenacao(RequestSpecification requestSpecification) {
-        if (existeOrdenacao()) {
+    private void addHeadersRequest(RequestSpecification requestSpecification) {
+        if (existHeaders()) {
+            requestSpecification.headers(
+                    getHeaders());
+        }
+    }
+
+    private void addQueryParamsRequest(RequestSpecification requestSpecification) {
+        if (existParametersParaFiltrate()) {
+            requestSpecification.queryParams(
+                    getFiltrates());
+        }
+    }
+
+    private void addOrderRequest(RequestSpecification requestSpecification) {
+        if (existOrdnance()) {
             requestSpecification
                     .queryParam("sort", getSort());
         }
     }
 
-    private void adicionarQueryParams(RequestSpecification requestSpecification) {
-        if (existeParametrosParaFiltragem()) {
-            requestSpecification.queryParams(
-                    getFiltros());
-        }
-    }
-
-    private void adicionarPaginacao(RequestSpecification requestSpecification) {
-        if (existePaginacao()) {
+    private void addPageRequest(RequestSpecification requestSpecification) {
+        if (existPagination()) {
             requestSpecification
                     .queryParam("page", getPage())
                     .queryParam("size", getSize());
         }
     }
 
-    public boolean existePaginacao() {
+    public boolean existHeaders() {
+        return Objects.nonNull(heades) && !heades.isEmpty();
+    }
+
+    public boolean existParametersParaFiltrate() {
+        return Objects.nonNull(parametros) && !parametros.isEmpty();
+    }
+
+    public boolean existPagination() {
         return page != null && size != null;
     }
 
-    public boolean existeOrdenacao() {
+    public boolean existOrdnance() {
         return sort != null;
-    }
-
-    public boolean existeParametrosParaFiltragem() {
-        return Objects.nonNull(parametros) && !parametros.isEmpty();
     }
 
     public Integer getPage() {
@@ -126,7 +135,11 @@ public abstract class QueryPageFeature {
         return sort;
     }
 
-    public Map<String, ?> getFiltros() {
+    public Map<String, ?> getHeaders() {
+        return heades;
+    }
+
+    public Map<String, ?> getFiltrates() {
         return parametros;
     }
 }

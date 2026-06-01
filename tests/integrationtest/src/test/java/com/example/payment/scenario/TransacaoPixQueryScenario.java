@@ -1,25 +1,26 @@
 package com.example.payment.scenario;
 
+
 import com.example.payment.common.QueryPageFeature;
 import io.restassured.response.Response;
 
 
-public class TransacaoPixGetScenario extends QueryPageFeature {
+public class TransacaoPixQueryScenario extends QueryPageFeature {
 
     private static final int SERVER_PORT = 8000;
     private static final String BASE_URI = "http://localhost";
-    private static final String ENDPOINT = "/transacao-pix/{id}";
+    private static final String ENDPOINT = "/transacao-pix";
 
-    public TransacaoPixGetScenario() {
+    public TransacaoPixQueryScenario() {
         super(BASE_URI, SERVER_PORT);
     }
 
-    public void gerarMassaTransacaoPix(String codigoTransacao) {
+    public void gerarMassaTransacoesPix() {
         // Neste exemplo a massa já foi carregada pelo init.sql.
         // Então aqui apenas validamos que o id foi informado.
     }
 
-    public Response requisicaoRest(String codigoTransacao) {
-        return execute(ENDPOINT, codigoTransacao);
+    public Response execulteRest() {
+        return execute(ENDPOINT);
     }
 }

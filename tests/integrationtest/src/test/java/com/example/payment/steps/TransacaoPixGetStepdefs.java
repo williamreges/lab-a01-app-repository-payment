@@ -3,6 +3,7 @@ package com.example.payment.steps;
 import com.example.payment.scenario.TransacaoPixGetScenario;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -14,7 +15,7 @@ public class TransacaoPixGetStepdefs {
     private TransacaoPixGetScenario pixGetScenario;
 
     @Before
-    public void init() {
+    public void init(Scenario scenario) {
         pixGetScenario = new TransacaoPixGetScenario();
     }
 
@@ -45,4 +46,5 @@ public class TransacaoPixGetStepdefs {
         var responseDTO = pixGetScenario.getResponse().as(JsonNode.class);
         assertThat(responseDTO.get("messages")).isNotEmpty();
     }
+
 }
