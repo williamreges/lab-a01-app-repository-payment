@@ -120,9 +120,6 @@ public class RestClient {
 
     public Response executeDelete(String endpoint, Object... pathParams) {
         response = configRequestSpecification()
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .body(requestBody)
                 .when()
                 .delete(endpoint, pathParams)
                 .then()
