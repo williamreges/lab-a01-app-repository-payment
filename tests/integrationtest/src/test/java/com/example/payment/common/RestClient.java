@@ -32,7 +32,7 @@ public class RestClient {
         this.headers = headers;
     }
 
-    public void addQueryParams(Map<String, String> queryParams) {
+    public void addParameters(Map<String, String> queryParams) {
         this.queryParams = queryParams;
     }
 
