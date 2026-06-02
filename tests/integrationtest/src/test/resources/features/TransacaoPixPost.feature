@@ -16,7 +16,7 @@ Scenario: Criar transação Pix com sucesso
   Then o sistema deve retornar o id da transação Pix criado com exito
 
 Scenario: Criar transação Pix com dados inválidos
-  Given que possuo dados nulos como codiooPessoa e valorTransacao para uma transação Pix
+  Given que possuo dados nulos como codigoPessoa e valorTransacao para uma transação Pix
   """
   {
     "dataTrancacao": "2026-05-25T23:02:00.940Z",
