@@ -2,10 +2,8 @@ package com.example.payment.steps;
 
 import com.example.payment.scenario.TransacaoPixPutScenario;
 import com.example.payment.scenario.dto.TransacaoPixUpdateRequestDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.DocStringType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -18,13 +16,6 @@ public class TransacaoPixPutStepdefs {
     @Before
     public void init() {
         pixPutScenario = new TransacaoPixPutScenario();
-    }
-
-    @DocStringType
-    public TransacaoPixUpdateRequestDTO defineTransacaoPixRequestDTO(String docString) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
-        return mapper.readValue(docString, TransacaoPixUpdateRequestDTO.class);
     }
 
     @Given("que existe uma transação Pix com o id {string} para atualizar")
