@@ -46,7 +46,7 @@ public class TransacaoPixQueryStepdefs {
 
     @And("eu faço uma requisição GET paginada ordenado por {string} de forma {string}")
     public void euFaçoUmaRequisiçãoGETPaginadaOrdenadoPorDataTransacaoDeFormaDecrescente(String nomeAtributo, String direcao) {
-        pixQueryScenario.addOrderPage(nomeAtributo, direcao);
+        pixQueryScenario.addSort(nomeAtributo, direcao);
     }
 
     @And("eu faço uma filtragem por parametros para listar as transações Pix")

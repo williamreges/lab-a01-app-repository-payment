@@ -6,9 +6,9 @@ import io.restassured.specification.RequestSpecification;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
-
 
 public abstract class RestFeature {
 
@@ -16,26 +16,27 @@ public abstract class RestFeature {
     private Integer page;
     private Integer size;
     private String sort;
-    private Map<String, String> parametros;
-    private Map<String, Object> heades;
+    private Map<String, String> queryParams;
+    private Map<String, Object> headers;
     private Object requestBody;
-    private Integer serverPort;
+
+    private final int serverPort;
     private final String baseUri;
 
-    protected RestFeature(String baseUri, Integer serverPort) {
+    protected RestFeature(String baseUri, int serverPort) {
         this.baseUri = baseUri;
         this.serverPort = serverPort;
     }
 
-    public void addHeaders(Map<String, Object> headers){
-        this.heades = headers;
+    public void addHeaders(Map<String, Object> headers) {
+        this.headers = headers;
     }
 
     public void addParameters(Map<String, String> parameters) {
-        this.parametros = parameters;
+        this.queryParams = parameters;
     }
 
-    public void addBody(Object requestBody){
+    public void addBody(Object requestBody) {
         this.requestBody = requestBody;
     }
 
@@ -44,17 +45,18 @@ public abstract class RestFeature {
         this.size = size;
     }
 
-    public void addOrderPage(String nomeAtributo, String direcao) {
+    public void addSort(String nomeAtributo, String direcao) {
         if (nomeAtributo == null || nomeAtributo.isBlank()) {
             this.sort = null;
             return;
         }
 
-        var dir = switch (direcao) {
+        String dir = switch (direcao) {
             case "crescente" -> "ASC";
             case "decrescendo" -> "DESC";
-            default -> "UNSORTED";
+            default -> throw new IllegalArgumentException("Direção inválida: " + direcao);
         };
+
         this.sort = String.format("%s,%s", nomeAtributo.trim(), dir);
     }
 
@@ -66,103 +68,135 @@ public abstract class RestFeature {
         return response;
     }
 
-    public Response executeGet(String endpoint, Object... queries) {
-        var requestSpecification = configRequestSpecification();
-        return requestSpecification
+    public Response executeGet(String endpoint, Object... pathParams) {
+        response = configRequestSpecification()
+                .accept(ContentType.JSON)
                 .when()
-                .contentType(ContentType.JSON)
-                .get(endpoint, queries)
+                .get(endpoint, pathParams)
                 .then()
                 .extract()
                 .response();
+
+        return response;
     }
 
-    public Response executePost(String endpoint, Object... queries) {
-        var requestSpecification = configRequestSpecification();
-        return requestSpecification
-                .when()
+    public Response executePost(String endpoint, Object... pathParams) {
+        response = configRequestSpecification()
                 .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
                 .body(requestBody)
-                .post(endpoint, queries)
+                .when()
+                .post(endpoint, pathParams)
                 .then()
                 .extract()
                 .response();
+
+        return response;
+    }
+
+    public Response executePut(String endpoint, Object... pathParams) {
+        response = configRequestSpecification()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .put(endpoint, pathParams)
+                .then()
+                .extract()
+                .response();
+
+        return response;
+    }
+
+    public Response executePatch(String endpoint, Object... pathParams) {
+        response = configRequestSpecification()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .patch(endpoint, pathParams)
+                .then()
+                .extract()
+                .response();
+        return response;
+    }
+
+    public Response executeDelete(String endpoint, Object... pathParams) {
+        response = configRequestSpecification()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .patch(endpoint, pathParams)
+                .then()
+                .extract()
+                .response();
+
+        return response;
+    }
+
+    public void clearRequestData() {
+        this.page = null;
+        this.size = null;
+        this.sort = null;
+        this.queryParams = null;
+        this.headers = null;
+        this.requestBody = null;
     }
 
     private RequestSpecification configRequestSpecification() {
-        var requestSpecification =
-                given().baseUri(baseUri)
-                        .port(serverPort);
+        RequestSpecification requestSpecification = given()
+                .baseUri(baseUri)
+                .port(serverPort)
+                .header("correlationID", UUID.randomUUID().toString());
 
         addHeadersRequest(requestSpecification);
         addQueryParamsRequest(requestSpecification);
         addPageRequest(requestSpecification);
-        addOrderRequest(requestSpecification);
+        addSortRequest(requestSpecification);
+
         return requestSpecification;
     }
 
     private void addHeadersRequest(RequestSpecification requestSpecification) {
-        if (existHeaders()) {
-            requestSpecification.headers(
-                    getHeaders());
+        if (hasHeaders()) {
+            requestSpecification.headers(headers);
         }
     }
 
     private void addQueryParamsRequest(RequestSpecification requestSpecification) {
-        if (existParametersParaFiltrate()) {
-            requestSpecification.queryParams(
-                    getFiltrates());
+        if (hasQueryParams()) {
+            requestSpecification.queryParams(queryParams);
         }
     }
 
-    private void addOrderRequest(RequestSpecification requestSpecification) {
-        if (existOrdnance()) {
-            requestSpecification
-                    .queryParam("sort", getSort());
+    private void addSortRequest(RequestSpecification requestSpecification) {
+        if (hasSort()) {
+            requestSpecification.queryParam("sort", sort);
         }
     }
 
     private void addPageRequest(RequestSpecification requestSpecification) {
-        if (existPagination()) {
+        if (hasPagination()) {
             requestSpecification
-                    .queryParam("page", getPage())
-                    .queryParam("size", getSize());
+                    .queryParam("page", page)
+                    .queryParam("size", size);
         }
     }
 
-    private boolean existHeaders() {
-        return Objects.nonNull(heades) && !heades.isEmpty();
+    private boolean hasHeaders() {
+        return Objects.nonNull(headers) && !headers.isEmpty();
     }
 
-    private boolean existParametersParaFiltrate() {
-        return Objects.nonNull(parametros) && !parametros.isEmpty();
+    private boolean hasQueryParams() {
+        return Objects.nonNull(queryParams) && !queryParams.isEmpty();
     }
 
-    private boolean existPagination() {
+    private boolean hasPagination() {
         return page != null && size != null;
     }
 
-    private boolean existOrdnance() {
+    private boolean hasSort() {
         return sort != null;
-    }
-
-    private Integer getPage() {
-        return this.page;
-    }
-
-    private Integer getSize() {
-        return this.size;
-    }
-
-    private String getSort() {
-        return sort;
-    }
-
-    private Map<String, ?> getHeaders() {
-        return heades;
-    }
-
-    private Map<String, ?> getFiltrates() {
-        return parametros;
     }
 }
