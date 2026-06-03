@@ -1,0 +1,102 @@
+parametros = [
+{
+       name="/config/app-repository-payment/eureka.client.enabled"
+       value="true"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/eureka.client.service-url.defaultZone"
+       value="http://localhost:8761/eureka"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/logging.pattern.correlation"
+       value="[${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/logging.include-application-name"
+       value="false"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/management.tracing.sampling.probability"
+       value="1.0"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/management.zipkin.tracing.endpoint"
+       value="http://localhost:9411/api/v2/spans"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/server.port"
+       value="8000"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.application.name"
+       value="app-repository-payment"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.cloud.config.enabled"
+       value="false"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.jpa.show-sql"
+       value="true"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.jpa.hibernate.ddl-auto"
+       value="update"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.datasource.driver-class-name"
+       value="com.mysql.cj.jdbc.Driver"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.datasource.url"
+       value="jdbc:mysql://localhost:3306/payment-db?allowPublicKeyRetrieval"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.datasource.username"
+       value="root"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.datasource.password"
+       value="password"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.flyway.driver-class-name"
+       value="com.mysql.cj.jdbc.Driver"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.flyway.url"
+       value="jdbc:mysql://localhost:3306/"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.flyway.schemas"
+       value="payment-db"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.flyway.user"
+       value="root"
+       microservicename="app-repository-payment"
+       },
+{
+       name="/config/app-repository-payment/spring.flyway.password"
+       value="password"
+       microservicename="app-repository-payment"
+       }
+]
