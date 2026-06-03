@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+
+  service-mysqldb:
+    image: mysql
+    restart: no
+    environment:
+      MYSQL_DATABASE: 'payment-db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - data:/var/lib/mysql
+    networks:
+      - lab-a01-network
+
+  zipkin-server:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+    networks:
+      - lab-a01-network
+
+  service-app-service-registry:
+    image: williamreges/lab-a01-infra-service-registry
+    ports:
+      - '8761:8761'
+    environment:
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: false
+      EUREKA_CLIENT_FETCH_REGISTRY: false
+    networks:
+      - lab-a01-network
+
+  service-app-repository-payment:
+    image: williamreges/lab-a01-app-repository-payment
+    restart: no
+    ports:
+      - '8000:8000'
+    networks:
+      - lab-a01-network
+    environment:
+      EUREKA_CLIENT_ENABLED: true
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://service-app-service-registry:8761/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin-server:9411/api/v2/spans
+      SPRING_CLOUD_CONFIG_ENABLED: false
+      SPRING_JPA_SHOW_SQL: true
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_DATASOURCE_URL: jdbc:mysql://service-mysqldb:3306/payment-db?allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_FLYWAY_ENABLED: false
+#      SPRING_FLYWAY_URL: jdbc:mysql://service-mysqldb:3306/
+#      SPRING_FLYWAY_SCHEMAS: payment-db
+#      SPRING_FLYWAY_USER: root
+#      SPRING_FLYWAY_PASSWORD: password
+    depends_on:
+      - service-mysqldb
+      - service-app-service-registry
+
+networks:
+  lab-a01-network:
+    driver: bridge
+
+volumes:
+  data:
+

@@ -1,4 +1,4 @@
-FROM amazoncorretto:17-alpine
+FROM amazoncorretto:21-alpine
 LABEL authors="william-reges"
 WORKDIR /app
 
