@@ -1,6 +1,8 @@
 package com.example.payment.scenario;
 
 import com.example.payment.common.RestClient;
+import com.example.payment.loader.TransacaoPixTestDataClient;
+import com.example.payment.scenario.dto.TransacaoPixRequestDTO;
 import io.restassured.response.Response;
 
 public class TransacaoPixGetScenario {
@@ -10,18 +12,33 @@ public class TransacaoPixGetScenario {
     private static final String ENDPOINT = "/transacao-pix/{id}";
 
     private final RestClient restClient;
+    private final TransacaoPixTestDataClient testDataClient;
+
+    private String codigoTransacaoGerado;
 
     public TransacaoPixGetScenario() {
         this.restClient = new RestClient(BASE_URI, SERVER_PORT);
+        this.testDataClient = new TransacaoPixTestDataClient();
     }
 
-    public void gerarMassaTransacaoPix(String codigoTransacao) {
-        // Neste exemplo a massa já foi carregada pelo init.sql.
-        // Então aqui apenas validamos que o id foi informado.
+    public void prepararTransacaoPixExistente() {
+        this.codigoTransacaoGerado = testDataClient.criarTransacaoPix();
     }
 
-    public void requisicaoRest(String codigoTransacao) {
+    public void prepararTransacaoPixExistente(TransacaoPixRequestDTO requestDTO) {
+        this.codigoTransacaoGerado = testDataClient.criarTransacaoPix(requestDTO);
+    }
+
+    public void buscarTransacaoPixGerada() {
+        restClient.executeGet(ENDPOINT, codigoTransacaoGerado);
+    }
+
+    public void buscarTransacaoPixPorId(String codigoTransacao) {
         restClient.executeGet(ENDPOINT, codigoTransacao);
+    }
+
+    public String getCodigoTransacaoGerado() {
+        return codigoTransacaoGerado;
     }
 
     public Response getResponse() {

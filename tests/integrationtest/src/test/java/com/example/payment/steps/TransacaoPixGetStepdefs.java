@@ -19,20 +19,27 @@ public class TransacaoPixGetStepdefs {
         pixGetScenario = new TransacaoPixGetScenario();
     }
 
-    @Given("que existe uma transação Pix com o id {string}")
-    public void queExisteUmaTransacaoPixComOId(String codigoTransacao) {
-        pixGetScenario.gerarMassaTransacaoPix(codigoTransacao);
+    @Given("que existe uma nova transação Pix cadastrada para consulta")
+    public void queExisteUmaNovaTransacaoPixCadastradaParaConsulta() {
+        pixGetScenario.prepararTransacaoPixExistente();
+    }
+
+    @When("eu buscar a transação Pix gerada")
+    public void euBuscarATransacaoPixGerada() {
+        pixGetScenario.buscarTransacaoPixGerada();
     }
 
     @When("eu buscar a transação Pix pelo id {string}")
     public void euBuscarATransacaoPixPeloId(String codigoTransacao) {
-        pixGetScenario.requisicaoRest(codigoTransacao);
+        pixGetScenario.buscarTransacaoPixPorId(codigoTransacao);
     }
 
-    @Then("o sistema deve retornar os dados da transação Pix id {string} com sucesso")
-    public void oSistemaDeveRetornarOsDadosDaTransacaoPixComSucesso(String codigoTransacao) {
+    @Then("o sistema deve retornar os dados da transação Pix gerada com sucesso")
+    public void oSistemaDeveRetornarOsDadosDaTransacaoPixGeradaComSucesso() {
         JsonNode responseDTO = pixGetScenario.getResponse().as(JsonNode.class);
-        assertThat(responseDTO.get("codigoTrancacao").asText()).isEqualTo(codigoTransacao);
+
+        assertThat(responseDTO.get("codigoTrancacao").asText())
+                .isEqualTo(pixGetScenario.getCodigoTransacaoGerado());
     }
 
     @Then("o status da resposta deve ser {int}")

@@ -67,6 +67,7 @@ public class RestClient {
     public Response executeGet(String endpoint, Object... pathParams) {
         response = configRequestSpecification()
                 .accept(ContentType.JSON)
+                .log().all()
                 .when()
                 .get(endpoint, pathParams)
                 .then()
@@ -78,6 +79,7 @@ public class RestClient {
 
     public Response executePost(String endpoint, Object... pathParams) {
         response = configRequestSpecification()
+                .log().all()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .body(requestBody)
@@ -142,6 +144,7 @@ public class RestClient {
         RequestSpecification requestSpecification = given()
                 .baseUri(baseUri)
                 .port(serverPort)
+                .log().all()
                 .header("correlationID", UUID.randomUUID().toString());
 
         addHeadersRequest(requestSpecification);

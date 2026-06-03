@@ -15,12 +15,17 @@ public class TransacaoPixDeleteStepdefs {
 
     @Before
     public void init() {
-        pixDeleteScenario = new TransacaoPixDeleteScenario();
+        this.pixDeleteScenario = new TransacaoPixDeleteScenario();
     }
 
-    @Given("que existe uma transação Pix com o id {string} para deletar")
-    public void queExisteUmaTransacaoPixComOIdParaDeletar(String codigoTransacao) {
-        pixDeleteScenario.prepararTransacaoPixExistente(codigoTransacao);
+    @Given("que existe uma nova transação Pix cadastrada para deletar")
+    public void queExisteUmaNovaTransacaoPixCadastradaParaDeletar() {
+        pixDeleteScenario.prepararTransacaoPixExistente();
+    }
+
+    @When("eu envio uma requisição para deletar a transação Pix gerada")
+    public void euEnvioUmaRequisicaoParaDeletarATransacaoPixGerada() {
+        pixDeleteScenario.deletarTransacaoPixGerada();
     }
 
     @When("eu envio uma requisição para deletar a transação Pix pelo id {string}")
@@ -28,9 +33,14 @@ public class TransacaoPixDeleteStepdefs {
         pixDeleteScenario.deletarTransacaoPixPorId(codigoTransacao);
     }
 
-    @Then("o sistema deve retornar {int} após o delete da transação Pix")
-    public void oSistemaDeveRetornarUmErroInformandoQueATransacaoNaoFoiEncontradaParaDeletar(int status) {
-        assertThat(pixDeleteScenario.getResponse().statusCode()).isEqualTo(status);
+    @Then("o sistema deve retornar confirmação de deleção com sucesso")
+    public void oSistemaDeveRetornarConfirmacaoDeDelecaoComSucesso() {
+        assertThat(pixDeleteScenario.getResponse().statusCode()).isEqualTo(200);
+    }
+
+    @Then("o sistema deve retornar um erro informando que a transação não foi encontrada para deletar")
+    public void oSistemaDeveRetornarUmErroInformandoQueATransacaoNaoFoiEncontradaParaDeletar() {
+        assertThat(pixDeleteScenario.getResponse().statusCode()).isEqualTo(404);
     }
 
     @After

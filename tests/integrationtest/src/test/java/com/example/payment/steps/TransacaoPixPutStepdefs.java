@@ -9,6 +9,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class TransacaoPixPutStepdefs {
 
     private TransacaoPixPutScenario pixPutScenario;
@@ -18,9 +20,9 @@ public class TransacaoPixPutStepdefs {
         pixPutScenario = new TransacaoPixPutScenario();
     }
 
-    @Given("que existe uma transação Pix com o id {string} para atualizar")
-    public void queExisteUmaTransacaoPixComOId(String codigoTransacao) {
-        pixPutScenario.prepararTransacaoExistente(codigoTransacao);
+    @Given("que existe uma nova transação Pix cadastrada para atualizar")
+    public void queExisteUmaNovaTransacaoPixCadastradaParaAtualizar() {
+        pixPutScenario.prepararTransacaoExistente();
     }
 
     @And("que possuo os dados válidos para atualizar a transação Pix")
@@ -28,25 +30,24 @@ public class TransacaoPixPutStepdefs {
         pixPutScenario.definirDadosValidosParaAtualizacao(dto);
     }
 
-    @When("eu envio uma requisição para atualizar a transação Pix")
-    public void euEnvioUmaRequisicaoParaAtualizarATransacaoPix() {
-        pixPutScenario.executarAtualizacao();
+    @When("eu envio uma requisição para atualizar a transação Pix gerada")
+    public void euEnvioUmaRequisicaoParaAtualizarATransacaoPixGerada() {
+        pixPutScenario.executarAtualizacaoDaTransacaoGerada();
+    }
+
+    @When("eu envio uma requisição para atualizar a transação Pix pelo id {string}")
+    public void euEnvioUmaRequisicaoParaAtualizarATransacaoPixPeloId(String codigoTransacao) {
+        pixPutScenario.executarAtualizacaoPorId(codigoTransacao);
     }
 
     @Then("o sistema deve retornar o status de transação Pix atualizada com sucesso")
-    public void oSistemaDeveRetornarStatusDeSucesso() {
-        pixPutScenario.getResponse()
-                .then()
-                .assertThat()
-                .statusCode(200);
+    public void oSistemaDeveRetornarOStatusDeTransacaoPixAtualizadaComSucesso() {
+        assertThat(pixPutScenario.getResponse().statusCode()).isEqualTo(200);
     }
 
     @Then("o sistema deve retornar um erro informando que a transação a atualizar não foi encontrada")
-    public void oSistemaDeveRetornarErroDeNaoEncontrada() {
-        pixPutScenario.getResponse()
-                .then()
-                .assertThat()
-                .statusCode(404);
+    public void oSistemaDeveRetornarUmErroInformandoQueATransacaoAAtualizarNaoFoiEncontrada() {
+        assertThat(pixPutScenario.getResponse().statusCode()).isEqualTo(404);
     }
 
     @After

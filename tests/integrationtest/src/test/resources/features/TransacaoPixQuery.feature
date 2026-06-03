@@ -29,7 +29,7 @@ Feature: Consultar lista paginada de transações Pix
       | codigoBeneficiario | e41b55c7-51f5-4035-9ecd-cfd3e7584146 |
      And eu faço uma requisição GET para listar as transações Pix
     Then o status da resposta da lista deve ser 200
-    Then devo validar que retornou 3 registros de transações Pix
+    Then devo validar que retornou 4 registros de transações Pix
 
   Scenario: Buscar lista paginada sem resultados
     Given que não existem transações Pix cadastradas
