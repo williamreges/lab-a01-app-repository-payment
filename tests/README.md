@@ -434,12 +434,21 @@ Exemplo de relatório HTML visto no browser onde valida 100% dos testes concluí
 
 ---
 
-### ⚠️ Notas 
+### ️️ ⚠️ Notas
 
-### Classe RestClient
+<details>
+<summary><strong>Classe RestClient.class</strong></summary>
 
-Este projeto utiliza **RestAssured** como cliente HTTP para realizar requisições REST contra a API. A pasta `common/` 
-centraliza todas as chamadas HTTP através da classe `RestClient`, que padroniza:
+Este projeto utiliza **RestAssured** como cliente HTTP para realizar requisições REST na API conforme a dependẽncia do POM.xml:
+```xml
+<dependency>
+    <groupId>io.rest-assured</groupId>
+    <artifactId>rest-assured</artifactId>
+    <version>5.4.0</version>
+</dependency>
+```
+A pasta `common/` centraliza todas as chamadas HTTP através da classe [RestClient.java](integrationtest/src/test/java/com/example/payment/common/RestClient.java),
+que padroniza as chamadas Rest:
 
 #### O que `RestClient` faz:
 
@@ -469,12 +478,15 @@ JsonNode body = response.as(JsonNode.class);
 // Limpar estado para próxima requisição
 restClient.clearRequestData();
 ```
+
 #### Vantagens desta abordagem:
 
 - **Reutilização**: múltiplos cenários usam o mesmo padrão sem duplicação de código HTTP.
 - **Manutenibilidade**: mudanças no protocolo (headers, autenticação, logging) acontecem em um único lugar.
 - **Rastreabilidade**: cada requisição inclui um `correlationID` único para debug nos logs da API.
 - **Flexibilidade**: suporta paginação, filtros, ordenação e parâmetros customizados de forma limpa.
+
+</details>
 
 ---
 
