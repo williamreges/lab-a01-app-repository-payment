@@ -434,10 +434,39 @@ Exemplo de relatório HTML visto no browser onde valida 100% dos testes concluí
 
 ---
 
-### ️️ ⚠️ Notas
+### ⚠️ Notas
+As pastas `/builder`, `/common`, `/converter` e `/loader` complementam a suíte de testes com classes utilitárias e suporte a chamadas REST. A seguir um exemplo do componente central de requisições:
 
 <details>
-<summary><strong>Classe RestClient.class</strong></summary>
+<summary><strong>📁 /builder</strong></summary>
+
+A pasta [/builder](integrationtest/src/test/java/com/example/payment/builder) contém classes que criam objetos de teste para as requisições usadas nos cenários. No momento, a classe interna principal é `TransacaoPixRequestDTOTestDataBuilder`, que aplica o padrão *Test Data Builder* para montar instâncias de `TransacaoPixRequestDTO`.
+
+#### Propósito da classe `TransacaoPixRequestDTOTestDataBuilder`:
+
+- **Facilitar a criação de payloads válidos** para os testes de transação PIX.
+- **Oferecer valores padrão** para os campos mais comuns, como `codigoPessoa`, `valorTransacao`, `dataTransacao`, `codigoBeneficiario` e `mensagemTransacao`.
+- **Permitir customização fluente** de campos específicos via métodos `comCodigoPessoa()`, `comValorTransancao()`, `comDataTransacao()`, `comCodigoBeneficiario()` e `comMensagemTransacao()`.
+- **Evitar repetição** de código nos testes ao construir o objeto de requisição de forma compacta e legível.
+
+#### Exemplo de uso:
+
+```java
+var request = TransacaoPixRequestDTOTestDataBuilder.builder()
+        .comMensagemTransacao("Teste de massa gerado por cenários")
+        .build();
+```
+
+Esse padrão torna os cenários mais fáceis de manter e reduz o acoplamento entre os dados de teste e a lógica dos steps.
+
+</details>
+
+
+
+<details>
+<summary><strong>📁 /common</strong></summary>
+
+A pasta [/common](integrationtest/src/test/java/com/example/payment/common) centraliza todas as chamadas HTTP através da classe [RestClient.java](integrationtest/src/test/java/com/example/payment/common/RestClient.java).
 
 Este projeto utiliza **RestAssured** como cliente HTTP para realizar requisições REST na API conforme a dependẽncia do POM.xml:
 ```xml
@@ -447,8 +476,6 @@ Este projeto utiliza **RestAssured** como cliente HTTP para realizar requisiçõ
     <version>5.4.0</version>
 </dependency>
 ```
-A pasta `common/` centraliza todas as chamadas HTTP através da classe [RestClient.java](integrationtest/src/test/java/com/example/payment/common/RestClient.java),
-que padroniza as chamadas Rest:
 
 #### O que `RestClient` faz:
 
@@ -485,6 +512,55 @@ restClient.clearRequestData();
 - **Manutenibilidade**: mudanças no protocolo (headers, autenticação, logging) acontecem em um único lugar.
 - **Rastreabilidade**: cada requisição inclui um `correlationID` único para debug nos logs da API.
 - **Flexibilidade**: suporta paginação, filtros, ordenação e parâmetros customizados de forma limpa.
+
+</details>
+
+
+<details>
+<summary><strong>📁 /converter</strong></summary>
+
+A pasta [/converter](integrationtest/src/test/java/com/example/payment/converter) contém classes usadas para converter parâmetros e DocStrings do Gherkin para objetos Java. O arquivo `DocStringTypeConverter.java` registra conversões customizadas que facilitam o uso de valores complexos nos steps.
+
+#### Propósito da classe `DocStringTypeConverter`:
+
+- **Transformar strings de feature em tipos Java** compatíveis com as assinaturas dos métodos dos steps.
+- **Permitir o uso de DocStrings e parâmetros personalizados** sem precisar fazer parsing manual em cada step.
+- **Centralizar a lógica de conversão** para garantir consistência e reduzir duplicação de código.
+
+#### Por que isso é importante:
+
+- Os arquivos `.feature` podem conter payloads ou estruturas JSON em DocStrings.
+- O Cucumber pode entregar esses conteúdos como texto cru, e o conversor faz o mapeamento automático para objetos Java.
+- Isso deixa os steps mais simples, focados em ação e validação, em vez de parsing.
+
+</details>
+
+<details>
+<summary><strong>📁 /loader</strong></summary>
+
+A pasta [/loader](integrationtest/src/test/java/com/example/payment/loader) contém classes responsáveis por preparar e criar dados de teste via API para os cenários. A classe `TransacaoPixTestDataClient` constrói uma requisição de transação PIX e executa o POST para gerar um registro válido.
+
+#### Propósito da classe `TransacaoPixTestDataClient`:
+
+- **Criar dados de teste reais** diretamente pela API, oferecendo um estado de teste consistente para as buscas e atualizações.
+- **Retornar o identificador da transação criada** para que cenários subsequentes possam consultar ou modificar o mesmo recurso.
+- **Desacoplar a preparação de massa de teste** da lógica dos steps, deixando os steps mais limpos e focados nas ações de validação.
+- **Reusar a mesma lógica de criação de transação** em diferentes cenários sem duplicação de chamadas HTTP.
+
+#### Como ela funciona:
+
+1. Cria um `TransacaoPixRequestDTO` usando o builder `TransacaoPixRequestDTOTestDataBuilder`.
+2. Adiciona o body ao `RestClient`.
+3. Executa um POST em `/transacao-pix`.
+4. Extrai o body da resposta e limpa o estado do cliente.
+
+#### Exemplo simplificado de uso:
+
+```java
+String codigoTransacao = transacaoPixTestDataClient.criarTransacaoPix();
+```
+
+Esse padrão garante que os testes de consulta (`GET`) e alteração (`PUT`/`DELETE`) tenham uma transação válida criada no início do cenário.
 
 </details>
 
