@@ -390,12 +390,13 @@ public class TransacaoPixTestDataClient {
 
 Esta organização deixa claro como cada camada contribui para o teste: a feature define o comportamento, a Step Definition traduz o passo, a classe de cenário executa a requisição e o loader prepara os dados.
 
+---
 
-
-### ▶️ Como executar os testes de integração
+## ▶️ Como executar os testes de integração
 
 Antes de rodar o Cucumber, é preciso subir o ambiente Docker definido em `/docker/docker-compose.yml`.
-Esse manifesto sobe a API `lab-a01-app-repository-payment` e, no mesmo stack, um container MySQL onde a API persiste os dados de teste. O mysql já sobe algumas massas pré-carregados principalmente para os testes que são GET.
+Esse manifesto inicia a API `lab-a01-app-repository-payment` em Spring Boot e um container MySQL para persistência dos dados de teste.
+O stack já carrega algumas massas de dados iniciais, especialmente para os cenários de consulta (GET).
 
 ```bash
 cd docker
@@ -420,17 +421,16 @@ Exemplo:
 mvn -f integrationtest/pom.xml test -Dcucumber.filter.tags="@TransacaoPixGet"
 ```
 
-Os relatórios HTML e JSON são gerados em `integrationtest/target/cucumber-reports`.
+### 📊 Relatório dos testes
 
-### ✨ Personalizações e dicas
+Os relatórios HTML e JSON são gerados em `integrationtest/target/cucumber-reports`
+* Relatório [cucumber-report.html](integrationtest/target/cucumber-reports/cucumber-report.html): pode visualizar as métricas geradas localmente;
+* Relatório [cucumber.json](integrationtest/target/cucumber-reports/cucumber.json): pode ser utilizado para enviar a alguma ferramenta externa para análise e validação.
 
-- Para alterar o local das `features` ou do `glue`, atualize `RunCucumberTest`.
-- Use `integrationtest/src/test/resources/cucumber.properties` para sobrescrever opções do Cucumber, por exemplo:
-  - `cucumber.publish.enabled=false`
-  - `cucumber.execution.parallel.enabled=true`
+Exemplo de relatório HTML visto no browser onde valida 100% dos testes concluídos para cada step do cenário:
+![img.png](docs/img2.png)
 
 ---
-Arquivo gerado automaticamente: resumo dos casos Cucumber e instruções de configuração.
 
 ## Referências
 
