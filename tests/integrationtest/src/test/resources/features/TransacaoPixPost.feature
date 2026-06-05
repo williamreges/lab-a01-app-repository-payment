@@ -1,3 +1,4 @@
+@TransacaoPixPost
 Feature: : Criar um registro de PIX
 
 Scenario: Criar transação Pix com sucesso

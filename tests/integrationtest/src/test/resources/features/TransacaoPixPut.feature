@@ -1,3 +1,4 @@
+@TransacaoPixPut
 Feature: Atualizar uma transação Pix
 
   Scenario: Atualizar transação Pix existente com sucesso

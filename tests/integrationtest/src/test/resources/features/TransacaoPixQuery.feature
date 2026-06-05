@@ -1,4 +1,4 @@
-@tag
+@TransacaoPixQuery
 Feature: Consultar lista paginada de transações Pix
 
   Scenario: Buscar lista paginada de transações Pix com sucesso

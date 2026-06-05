@@ -1,3 +1,4 @@
+@TransacaoPixDelete
 Feature: Deletar uma transação Pix
 
   Scenario: Deletar transação Pix existente com sucesso

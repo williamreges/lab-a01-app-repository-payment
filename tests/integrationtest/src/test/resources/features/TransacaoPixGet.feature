@@ -1,3 +1,4 @@
+@TransacaoPixGet
 Feature: Obter um registro de PIX
 
   Scenario: Buscar transação Pix existente com sucesso

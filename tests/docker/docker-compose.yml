@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   service-mysqldb:
-    image: mysql
+    image: mysql:9.2.0
     restart: no
     environment:
       MYSQL_DATABASE: 'payment-db'
@@ -14,7 +14,7 @@ services:
       - '3306:3306'
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - data:/var/lib/mysql
+      - database-mysql:/var/lib/mysql
     networks:
       - lab-a01-network
 
@@ -60,11 +60,17 @@ services:
     depends_on:
       - service-mysqldb
       - service-app-service-registry
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
 
 networks:
   lab-a01-network:
     driver: bridge
 
 volumes:
-  data:
+  database-mysql:
 
