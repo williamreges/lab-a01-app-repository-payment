@@ -132,6 +132,8 @@ Este projeto parte de um módulo base Cucumber e foi adaptado para executar os t
 - inclusão de `builders` , `commons`, `loaders`, `dtos` e clientes HTTP com `RestAssured` para suportar os cenários de teste;
 - configuração de relatórios e parâmetros de execução para a suíte de integração.
 
+
+
 ### 🧩 Organização das pastas
 
 A estrutura principal do projeto de testes está em [integrationtest/src/test](integrationtest/src/test) e está organozado da seguinte forma:
@@ -429,6 +431,50 @@ Os relatórios HTML e JSON são gerados em `integrationtest/target/cucumber-repo
 
 Exemplo de relatório HTML visto no browser onde valida 100% dos testes concluídos para cada step do cenário:
 ![img.png](docs/img2.png)
+
+---
+
+### ⚠️ Notas 
+
+### Classe RestClient
+
+Este projeto utiliza **RestAssured** como cliente HTTP para realizar requisições REST contra a API. A pasta `common/` 
+centraliza todas as chamadas HTTP através da classe `RestClient`, que padroniza:
+
+#### O que `RestClient` faz:
+
+1. **Centraliza a configuração de requisições**: base URI, porta, headers customizados (como `correlationID`), content-type e aceita JSON por padrão.
+2. **Fornece métodos simples para cada verbo HTTP**: `executeGet()`, `executePost()`, `executePut()`, `executePatch()`, `executeDelete()`.
+3. **Gerencia o estado da requisição**: mantém headers, query params, body, paginação e sort entre chamadas.
+4. **Suporta parâmetros de rota**: permite substituições dinâmicas no endpoint (ex.: `/transacao-pix/{id}`).
+5. **Captura a resposta**: armazena o objeto `Response` para validações posteriores nos steps.
+
+#### Exemplo de uso em um cenário:
+
+```java
+// No cenário, criar o cliente
+RestClient restClient = new RestClient("http://localhost", 8000);
+
+// Preparar dados de requisição
+restClient.addBody(transacaoPixDTO);
+
+// Executar POST
+restClient.executePost("/transacao-pix");
+
+// Acessar a resposta para validação
+Response response = restClient.getResponse();
+String statusCode = response.getStatusCode();  // ex: 201
+JsonNode body = response.as(JsonNode.class);
+
+// Limpar estado para próxima requisição
+restClient.clearRequestData();
+```
+#### Vantagens desta abordagem:
+
+- **Reutilização**: múltiplos cenários usam o mesmo padrão sem duplicação de código HTTP.
+- **Manutenibilidade**: mudanças no protocolo (headers, autenticação, logging) acontecem em um único lugar.
+- **Rastreabilidade**: cada requisição inclui um `correlationID` único para debug nos logs da API.
+- **Flexibilidade**: suporta paginação, filtros, ordenação e parâmetros customizados de forma limpa.
 
 ---
 
