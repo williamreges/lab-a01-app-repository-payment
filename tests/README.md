@@ -1,4 +1,4 @@
-# 🚀 Testes E2E com Cucumber
+# 🚀 Testes Integrado com Cucumber
 
 ---
 
