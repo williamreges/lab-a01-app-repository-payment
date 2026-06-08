@@ -13,13 +13,17 @@ Testar de forma integrada os endpoints REST da API `lab-a01-app-repository-payme
 - Docker
 
 ## ⚙️ Cucumber
+O Cucumber 5 (e suas versões superiores dentro do ecossistema Cucumber-JVM) trouxe mudanças importantes para a automação de testes com BDD, introduzindo uma arquitetura baseada no Cucumber JUnit Platform Engine e a integração nativa com o JUnit 5.
 
-O projeto usa Cucumber com JUnit Platform para executar os testes de integração como uma suíte. A classe `RunCucumberTest` carrega os arquivos `.feature` em `integrationtest/src/test/resources/features`, aplica o pacote de glue `com.example.payment` e gera relatórios HTML e JSON em `integrationtest/target/cucumber-reports`.
+Esta atualização removeu o antigo modelo de anotações como @RunWith(Cucumber.class) do JUnit 4, substituindo-o por configurações mais modernas via propriedades de sistema ou arquivos de configuração (junit-platform.properties).
 
 O uso do Cucumber é importante porque:
-- permite descrever os testes como cenários legíveis em linguagem natural
-- valida os passos dos casos de transação PIX diretamente contra a API REST
-- facilita a comunicação entre a equipe técnica e os requisitos de negócio
+- permite descrever comportamentos esperados em linguagem natural, tornando os testes mais legíveis.
+- facilita a automação da verificação desses comportamentos contra a aplicação.
+- melhora a comunicação entre a equipe técnica e as partes interessadas, alinhando requisitos e testes.
+
+O conjunto de testes integrados nesse repositório utiliza uma estrutura enxuta com Cucumber, RestAssured e AssertJ, operando sem o Spring Framework ou os executores do JUnit 5. O AssertJ fornece uma validação fluida e legível para as respostas da API REST, usando assertThat() para tratar as asserções diretamente, as quais o Cucumber captura para a geração de relatórios de testes.
+
 
 ### 🌱 Projeto gerado com Cucumber
 
@@ -566,7 +570,7 @@ Esse padrão garante que os testes de consulta (`GET`) e alteração (`PUT`/`DEL
 
 ---
 
-## Referências
+## 📚 Referências
 
 ### Cucumber Docs
 - [Cucumber io](https://cucumber.io/)
