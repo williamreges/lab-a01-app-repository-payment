@@ -24,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TransacaoPixQueryStepdefs {
 
-    private static final String ENDPOINT = "/transacao-pix";
-
     @Autowired
     private TransacaoPixQueryScenario pixQueryScenario;
 
@@ -58,7 +56,7 @@ public class TransacaoPixQueryStepdefs {
 
     @And("eu faço uma requisição GET para listar as transações Pix")
     public void euFaçoUmaRequisiçãoGETParaListarAsTransacoesPix() {
-        var response = pixQueryScenario.executeRequisicaoRest(ENDPOINT);
+        var response = pixQueryScenario.executeRequisicaoRest();
         pixQueryScenario.addResponse(response);
     }
 

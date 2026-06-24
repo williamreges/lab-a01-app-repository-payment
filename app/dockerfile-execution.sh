@@ -6,3 +6,4 @@ docker run -p 8000:8000 \
 --net=host \
 --name ${NAME_REPO}/${NAME_IMAGE} \
 --rm ${NAME_REPO}/${NAME_IMAGE}
+

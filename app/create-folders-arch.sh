@@ -35,6 +35,7 @@ src/main/java/com/example/payment/entrypoint/controller \
 src/main/java/com/example/payment/entrypoint/converter \
 src/main/java/com/example/payment/entrypoint/exception \
 src/main/java/com/example/payment/entrypoint/listener \
+src/main/java/com/example/payment/entrypoint/mapper \
 src/main/java/com/example/payment/entrypoint/model \
 src/main/java/com/example/payment/entrypoint/model/request \
 src/main/java/com/example/payment/entrypoint/model/response
