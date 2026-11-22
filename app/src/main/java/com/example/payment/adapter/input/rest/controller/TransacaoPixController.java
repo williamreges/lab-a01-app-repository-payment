@@ -8,6 +8,8 @@ import com.example.payment.domain.entity.TransacaoPixRequest;
 import com.example.payment.domain.entity.TransacaoPixResponse;
 import com.example.payment.domain.entity.TransacaoPixUpdateRequest;
 import com.example.payment.domain.port.TransacaoPersistencePort;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +46,8 @@ public class TransacaoPixController {
     }
 
     @PostMapping
+    @Timed(value = "transacao_pix_save", description = "Tempo de execução do método save")
+    @Counted(value = "transacao_pix_save_quantidade", description = "Número de vezes que o método save foi chamado")
     public String save(@Valid @RequestBody TransacaoPixRequestDTO requestDTO) {
         log.info("Start save {}", requestDTO);
         TransacaoPixRequest domainRequest = requestDTO.toDomain();
